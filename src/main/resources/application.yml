@@ -42,11 +42,11 @@ spring:
     show-sql: true
 
 # Hibernate ddl auto (create, create-drop, update)
-#    hibernate:
-#      ddl-auto: update
+    hibernate:
+      
 #
 ### Naming strategy
-#      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
 
 # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
 # stripped before adding them to the entity manager)
