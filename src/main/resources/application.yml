@@ -42,7 +42,7 @@ spring:
     show-sql: true
 
 # Hibernate ddl auto (create, create-drop, update)
-#    hibernate:
+    hibernate:
 #      ddl-auto: update
 
 ## Naming strategy
