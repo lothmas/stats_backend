@@ -42,8 +42,8 @@ spring:
     show-sql: true
 
 # Hibernate ddl auto (create, create-drop, update)
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: update
 
 ## Naming strategy
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
