@@ -1,6 +1,6 @@
-server:
-  port: 8090
-  context-path: /iqa
+#server:
+#  port: 8090
+#  context-path: /iqa
 
 #db:
 # driver: com.mysql.jdbc.Driver
