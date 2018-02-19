@@ -115,7 +115,7 @@ public class VerificationController {
         return "profile";
     }
 
-    @RequestMapping(value = {"/verification"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/verification","/checkout_payment"}, method = RequestMethod.GET)
     public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId) {
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
@@ -137,6 +137,10 @@ public class VerificationController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+            else{
+                model.addAttribute("profile", session.getAttribute("profile"));
+                return "checkout_payment";
             }
 
         }
