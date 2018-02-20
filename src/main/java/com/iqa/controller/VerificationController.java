@@ -2,7 +2,6 @@ package com.iqa.controller;
 
 
 import com.iqa.domain.countries.exception.CountryNotFoundException;
-import com.iqa.domain.countries.model.Countries;
 import com.iqa.domain.countries.service.CountriesService;
 import com.iqa.domain.derived.country.model.Country;
 import com.iqa.institutes.exception.InstitutesNotFoundException;
@@ -27,11 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -310,7 +306,7 @@ public class VerificationController {
 
     }
 
-    @RequestMapping(value = {"/checkout_payment", "/checkout_cart", "/checkout_complete"})
+    @RequestMapping(value = {"/checkoutPayment", "/checkoutCart", "/checkoutComplete"})
     public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
         String url = request.getRequestURI();
@@ -318,11 +314,11 @@ public class VerificationController {
         if (index != -1) {
             ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
 
-            if (url.contains("checkout_cart")) {
+            if (url.contains("checkoutCart")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 return url;
 
-            } else if (url.contains("checkout_payment")) {
+            } else if (url.contains("checkoutPayment")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 if (profileEntity.getUserType().equalsIgnoreCase("1") && null != qty) {
                     model.addAttribute("amountCredited", 5 * Double.valueOf(qty));
@@ -342,7 +338,7 @@ public class VerificationController {
                 }
 
                 return url;
-            } else if (url.contains("checkout_complete")) {
+            } else if (url.contains("checkoutComplete")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 try {
                     ProfileEntity profileEntity1=profilesService.findUserByUserId(profileEntity.getId());
@@ -358,7 +354,7 @@ public class VerificationController {
                 }
                 model.addAttribute("amountCredited", session.getAttribute("amountCredited"));
 
-                return "checkout_complete";
+                return "checkoutComplete";
             }
 
             return "profile";
