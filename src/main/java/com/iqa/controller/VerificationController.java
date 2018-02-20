@@ -76,12 +76,19 @@ public class VerificationController {
     public String loginVerification(HttpServletRequest request, LoginRequest loginRequest, Model model, HttpSession session,
                                     @RequestParam(value = "username", required = false) String username, @RequestParam(value = "searchText", required = false) String searchText
             , @RequestParam(value = "password", required = false) String password, final RedirectAttributes redirectAttributes) {
-        ProfileEntity profileEntity;
+        ProfileEntity profileEntity = null;
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         if (index != -1) {
             if (url.contains("profile")) {
-                model.addAttribute("profile", session.getAttribute("profile"));
+                ProfileEntity existing=new ProfileEntity();
+                try {
+                     existing=(ProfileEntity) session.getAttribute("profile");
+                    profileEntity = profilesService.findUserByUserId(existing.getId());
+                } catch (ProfilesNotFoundException e) {
+                    e.printStackTrace();
+                } 
+                model.addAttribute("profile", profileEntity);
                 model.addAttribute("alertMessage", null);
                 ProfileEntity profileEntity1 = (ProfileEntity) session.getAttribute("profile");
                 try {

@@ -63,4 +63,4 @@ security:
     enabled: false
 
   thymeleaf:
-    prefix: classpath:/static/
+    prefix: classpath:/templates/
