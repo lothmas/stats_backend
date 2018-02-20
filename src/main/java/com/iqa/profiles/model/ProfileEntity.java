@@ -25,7 +25,7 @@ public class ProfileEntity {
     private String picture;
     private int kyc;
     private Double balanceAmount;
-    private String topUpDate;
+    private Date topUpDate;
     private Integer status;
     private String extras;
     private String name;
@@ -191,12 +191,12 @@ public class ProfileEntity {
     }
 
     @Basic
-    @Column(name = "top_up_date", nullable = true, length = 45)
-    public String getTopUpDate() {
+    @Column(name = "top_up_date", nullable = true)
+    public Date getTopUpDate() {
         return topUpDate;
     }
 
-    public void setTopUpDate(String topUpDate) {
+    public void setTopUpDate(Date topUpDate) {
         this.topUpDate = topUpDate;
     }
 

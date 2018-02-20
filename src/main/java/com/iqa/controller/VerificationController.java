@@ -339,8 +339,14 @@ public class VerificationController {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 try {
                     ProfileEntity profileEntity1=profilesService.findUserByUserId(profileEntity.getId());
-                    profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()+(Integer)session.getAttribute("amountCredited"));
+                    profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()+(Double)session.getAttribute("amountCredited"));
+                    long time = System.currentTimeMillis();
+                    java.sql.Date date = new java.sql.Date(time);
+                    profileEntity1.setTopUpDate(date);
+                    profilesService.saveUser(profileEntity1);
                 } catch (ProfilesNotFoundException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 model.addAttribute("amountCredited", session.getAttribute("amountCredited"));
