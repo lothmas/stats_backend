@@ -72,7 +72,7 @@ public class VerificationController {
 //    }
 
 
-    @RequestMapping({"/verification_login","/profile"})
+    @RequestMapping({"/verification_login", "/profile"})
     public String loginVerification(HttpServletRequest request, LoginRequest loginRequest, Model model, HttpSession session,
                                     @RequestParam(value = "username", required = false) String username, @RequestParam(value = "searchText", required = false) String searchText
             , @RequestParam(value = "password", required = false) String password, final RedirectAttributes redirectAttributes) {
@@ -83,15 +83,14 @@ public class VerificationController {
             if (url.contains("profile")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 model.addAttribute("alertMessage", null);
-                ProfileEntity profileEntity1= (ProfileEntity) session.getAttribute("profile");
+                ProfileEntity profileEntity1 = (ProfileEntity) session.getAttribute("profile");
                 try {
                     model.addAttribute("countryName", countriesService.findByCountryId(profileEntity1.getCountryId()).getName());
                 } catch (CountryNotFoundException e) {
                     e.printStackTrace();
                 }
                 return "profile";
-            }
-            else if (url.contains("verification_login")) {
+            } else if (url.contains("verification_login")) {
                 try {
                     profileEntity = profilesService.findProfileByUsernameAndPassword(username, password);
                     model.addAttribute("countryName", countriesService.findByCountryId(profileEntity.getCountryId()).getName());
@@ -115,8 +114,8 @@ public class VerificationController {
         return "profile";
     }
 
-    @RequestMapping(value = {"/verification","/checkout_payment"}, method = RequestMethod.GET)
-    public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId) {
+    @RequestMapping(value = {"/verification"}, method = RequestMethod.GET)
+    public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "checkOutValue", required = false) Double checkOutValue) {
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
 
@@ -138,12 +137,8 @@ public class VerificationController {
                     e.printStackTrace();
                 }
             }
-            else{
-                model.addAttribute("profile", session.getAttribute("profile"));
-                return "checkout_payment";
-            }
-
         }
+
         return "profile";
     }
 
@@ -218,7 +213,7 @@ public class VerificationController {
             long diffInMillies = Math.abs(new Date().getTime() - verifiedCandidate.get(0).getUpdateDate().getTime());
             long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-            if(diff>31){
+            if (diff > 31) {
                 throw new VerifiedCandidatesNotFoundException("");
             }
 
@@ -264,18 +259,18 @@ public class VerificationController {
                     verificationRequestEntity.setRequesterId(profiles.getId());
                     try {
                         verificationRequestService.saveVerificationRequest(verificationRequestEntity);
-                        ProfileEntity profileEntity1= profilesService.findUserByUserId(profileEntity.getId());
-                        if(profileEntity1.getUserType().equals("1")){
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()-5);
+                        ProfileEntity profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
+                        if (profileEntity1.getUserType().equals("1")) {
+                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 5);
                         }
-                        if(profileEntity1.getUserType().equals("2")){
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()-10);
+                        if (profileEntity1.getUserType().equals("2")) {
+                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 10);
                         }
-                        if(profileEntity1.getUserType().equals("3")){
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()-15);
+                        if (profileEntity1.getUserType().equals("3")) {
+                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 15);
                         }
-                        if(profileEntity1.getUserType().equals("4")){
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()-20);
+                        if (profileEntity1.getUserType().equals("4")) {
+                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 20);
                         }
                         profilesService.saveUser(profileEntity1);
                     } catch (Exception e2) {
@@ -308,5 +303,54 @@ public class VerificationController {
 
     }
 
+    @RequestMapping(value = {"/checkout_payment", "/checkout_cart", "/checkout_complete"})
+    public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
+            , @RequestParam(value = "qty", required = false) String qty) {
+        String url = request.getRequestURI();
+        int index = url.lastIndexOf("/");
+        if (index != -1) {
+            ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
 
+            if (url.contains("checkout_cart")) {
+                model.addAttribute("profile", session.getAttribute("profile"));
+                return url;
+
+            } else if (url.contains("checkout_payment")) {
+                model.addAttribute("profile", session.getAttribute("profile"));
+                if (profileEntity.getUserType().equalsIgnoreCase("1") && null != qty) {
+                    model.addAttribute("amountCredited", 5 * Double.valueOf(qty));
+                    session.setAttribute("amountCredited", 5 * Double.valueOf(qty));
+                } else if (profileEntity.getUserType().equalsIgnoreCase("2") && null != qty) {
+                    model.addAttribute("amountCredited", 10 * Double.valueOf(qty));
+                    session.setAttribute("amountCredited", 10 * Double.valueOf(qty));
+
+                } else if (profileEntity.getUserType().equalsIgnoreCase("3") && null != qty) {
+                    model.addAttribute("amountCredited", 15 * Double.valueOf(qty));
+                    session.setAttribute("amountCredited", 15 * Double.valueOf(qty));
+
+                } else if (profileEntity.getUserType().equalsIgnoreCase("4") && null != qty) {
+                    model.addAttribute("amountCredited", 20 * Double.valueOf(qty));
+                    session.setAttribute("amountCredited", 20 * Double.valueOf(qty));
+
+                }
+
+                return url;
+            } else if (url.contains("checkout_complete")) {
+                model.addAttribute("profile", session.getAttribute("profile"));
+                try {
+                    ProfileEntity profileEntity1=profilesService.findUserByUserId(profileEntity.getId());
+                    profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()+(Integer)session.getAttribute("amountCredited"));
+                } catch (ProfilesNotFoundException e) {
+                    e.printStackTrace();
+                }
+                model.addAttribute("amountCredited", session.getAttribute("amountCredited"));
+
+                return "checkout_complete";
+            }
+
+            return "profile";
+        }
+
+        return url;
+    }
 }
