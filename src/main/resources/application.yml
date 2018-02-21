@@ -63,4 +63,4 @@ security:
     enabled: false
 
   thymeleaf:
-    prefix: ${project.base-dir}/src/main/resources/templates/
+    prefix: classpath:/static/
