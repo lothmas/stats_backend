@@ -306,7 +306,7 @@ public class VerificationController {
 
     }
 
-    @RequestMapping(value = {"/payment", "/cart", "/complete"})
+    @RequestMapping(value = {"/payment", "/complete"})
     public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
         String url = request.getRequestURI();
@@ -314,11 +314,7 @@ public class VerificationController {
         if (index != -1) {
             ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
 
-            if (url.contains("cart")) {
-                model.addAttribute("profile", session.getAttribute("profile"));
-                return url;
-
-            } else if (url.contains("payment")) {
+             if (url.contains("payment")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 if (profileEntity.getUserType().equalsIgnoreCase("1") && null != qty) {
                     model.addAttribute("amountCredited", 5 * Double.valueOf(qty));
@@ -362,4 +358,22 @@ public class VerificationController {
 
         return url;
     }
+
+    @RequestMapping(value = {"/cart"})
+    public String checkout(HttpServletRequest request, Model model, HttpSession session) {
+
+        String url = request.getRequestURI();
+        int index = url.lastIndexOf("/");
+        if (index != -1) {
+            ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
+
+            if (url.contains("cart")) {
+                model.addAttribute("profile", session.getAttribute("profile"));
+                return url;
+
+            }
+        }
+        return "cart";
+    }
+
 }
