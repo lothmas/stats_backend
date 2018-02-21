@@ -306,19 +306,19 @@ public class VerificationController {
 
     }
 
-    @RequestMapping(value = {"/payment", "/cart", "/complete"})
-    public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
+    @RequestMapping(value = {"/form_wizards", "/chart-d3", "/complete"})
+    public String form_wizards(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         if (index != -1) {
             ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
 
-            if (url.contains("cart")) {
+            if (url.contains("chart-d3")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 return url;
 
-            } else if (url.contains("payment")) {
+            } else if (url.contains("form_wizards")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 if (profileEntity.getUserType().equalsIgnoreCase("1") && null != qty) {
                     model.addAttribute("amountCredited", 5 * Double.valueOf(qty));
