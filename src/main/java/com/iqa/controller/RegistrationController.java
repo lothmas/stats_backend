@@ -147,7 +147,7 @@ public class RegistrationController {
                 profileEntity.setStatus(1);
                 profileEntity.setEnabled(1);
                 profileEntity.setKyc(1);
-                profileEntity.setBalanceAmount(300.00);
+                profileEntity.setBalanceAmount(0.00);
                 profileEntity.setEmailAddress(emailAddress);
                 profileEntity.setPhoneNumber(phoneNumber);
                 profileEntity.setUserType(userType);

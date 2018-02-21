@@ -306,7 +306,7 @@ public class VerificationController {
 
     }
 
-    @RequestMapping(value = {"/checkoutPayment", "/checkoutCart", "/checkoutComplete"})
+    @RequestMapping(value = {"/payment", "/cart", "/complete"})
     public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
         String url = request.getRequestURI();
@@ -314,11 +314,11 @@ public class VerificationController {
         if (index != -1) {
             ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
 
-            if (url.contains("checkoutCart")) {
+            if (url.contains("cart")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 return url;
 
-            } else if (url.contains("checkoutPayment")) {
+            } else if (url.contains("payment")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 if (profileEntity.getUserType().equalsIgnoreCase("1") && null != qty) {
                     model.addAttribute("amountCredited", 5 * Double.valueOf(qty));
@@ -338,7 +338,7 @@ public class VerificationController {
                 }
 
                 return url;
-            } else if (url.contains("checkoutComplete")) {
+            } else if (url.contains("complete")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 try {
                     ProfileEntity profileEntity1=profilesService.findUserByUserId(profileEntity.getId());
@@ -354,7 +354,7 @@ public class VerificationController {
                 }
                 model.addAttribute("amountCredited", session.getAttribute("amountCredited"));
 
-                return "checkoutComplete";
+                return "complete";
             }
 
             return "profile";

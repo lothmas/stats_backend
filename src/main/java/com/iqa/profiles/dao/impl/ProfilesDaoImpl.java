@@ -59,7 +59,7 @@ public class ProfilesDaoImpl extends AbstractDaoImpl<ProfileEntity, Integer> imp
 
         List<ProfileEntity> result = getCurrentSession().createCriteria(ProfileEntity.class)
                 .add(Restrictions.eq("username", username))
-                //                .add(Restrictions.eq("password", password))
+                .add(Restrictions.eq("enabled", 1))
                 .list();
 
         end1 = System.currentTimeMillis();

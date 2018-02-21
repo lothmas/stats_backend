@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <title>E-Verify | Register Page</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
+    <link href="assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="assets/css/animate.min.css" rel="stylesheet"/>
+    <link href="assets/css/style.min.css" rel="stylesheet"/>
+    <link href="assets/css/style-responsive.min.css" rel="stylesheet"/>
+    <link href="assets/css/theme/default.css" rel="stylesheet" id="theme"/>
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="assets/plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top bg-white">
+<!-- begin #page-loader -->
+<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+<!-- end #page-loader -->
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade">
+    <!-- begin register -->
+    <div class="register register-with-news-feed">
+        <!-- begin news-feed -->
+        <div class="news-feed">
+            <div class="news-image">
+                <img src="assets/img/login-bg/bg-8.jpg" alt=""/>
+            </div>
+            <div class="news-caption">
+                <h4 class="caption-title"><i class="fa fa-edit text-success"></i> Register for an E-Verify Account</h4>
+                <p>
+                    Verification and Authentication is our Specialty
+                </p>
+            </div>
+        </div>
+        <!-- end news-feed -->
+        <!-- begin right-content -->
+        <div class="right-content">
+            <!-- begin register-header -->
+
+            <h1 class="register-header">
+                <span class="logo-icon"><i><img src="frontend/assets/img/everify-transparent2.png"/></i></span>
+                <small>Create your E - Verify Account</small>
+            </h1>
+            <div class="alert alert-info row align-items-center justify-content-center" th:if="${alertMessage!=null}">
+                <div th:text="${alertMessage}">
+                    <div><span class="glyphicon glyphicon-remove"></span>
+                        <small></small></div>
+                </div>
+            </div>
+            <!-- end register-header -->
+            <!-- begin register-content -->
+            <div class="register-content">
+                <form action="#" data-th-action="@{./register}" th:object="${register}" method="post"
+                      enctype="multipart/form-data" class="margin-bottom-0">
+                    <label class="control-label">Classification <span class="text-danger">*</span></label>
+                    <div class="row row-space-10">
+                        <div class="col-md-6 m-b-15">
+                            <select class="form-control" name="userType" onchange='this.form.submit()'>
+                                <div th:if="${userType==null}">
+                                    <option selected="true" th:disabled="true" value="">User Type</option>
+                                </div>
+                                <div th:if="${userType=='1'}">
+                                    <option selected="true" th:disabled="true" value="1">Individual</option>
+                                </div>
+                                <div th:if="${userType=='2'}">
+                                    <option selected="true" th:disabled="true" value="2">Government</option>
+                                </div>
+                                <div th:if="${userType=='3'}">
+                                    <option selected="true" th:disabled="true" value="3">Parastatal</option>
+                                </div>
+                                <div th:if="${userType=='4'}">
+                                    <option selected="true" th:disabled="true" value="4">Private Company</option>
+                                </div>
+                                <option value="1">Individual</option>
+                                <option value="2">Government</option>
+                                <option value="3">Parastatal</option>
+                                <option value="4">Private Company</option>
+                            </select>
+                            <noscript><input type="submit" value="Submit"/></noscript>
+
+                        </div>
+
+                        <div class="col-md-6 m-b-15">
+                            <select class="form-control input-white" name="countryId" required="true">
+                                <option selected="true" th:disabled="true">
+                                    <div>Select Country</div>
+                                </option>
+                                <optgroup th:each="countries, iterateShares : ${countries}"
+                                          th:label="${countries.continent}">
+                                    <option style="font-weight: bold;"
+                                            th:value="${countries.countryId}"
+                                            th:text="${#strings.capitalize(countries.countryName)}"></option>
+
+                                </optgroup>
+                            </select></div>
+                    </div>
+
+                    <label class="control-label">Profile Details <span class="text-danger">*</span></label>
+                    <div class="row row-space-10">
+                        <div class="col-md-6 m-b-15">
+                            <input type="text" name="username" class="form-control" placeholder="username" required="true"/>
+                        </div>
+                        <div class="col-md-6 m-b-15">
+                            <input type="password" name="password" class="form-control" placeholder="Password" required="true"/>
+                        </div>
+                    </div>
+
+
+                    <label th:if="${userType!=null}" class="control-label">User Details <span class="text-danger">*</span></label>
+                    <div class="row row-space-10" th:if="${userType=='1'}">
+                        <div class="col-md-6 m-b-15">
+                            <input type="text" name="firstName" class="form-control" placeholder="First name" required="true"/>
+                        </div>
+                        <div class="col-md-6 m-b-15">
+                            <input type="text" name="surname" class="form-control" placeholder="Last name" required="true"/>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" name="idNumber" class="form-control" placeholder="ID-Number" required="true"/>
+                        </div>
+                    </div>
+
+                    <div th:if="${userType!=null}" class="row m-b-15">
+                        <div class="col-md-12" th:if="${userType=='2'}">
+                            <input type="text" name="name" class="form-control" placeholder="Government Ministry Name" required="true"/>
+                        </div>
+                        <div class="col-md-12" th:if="${userType=='3'}">
+                            <input type="text" name="name" class="form-control" placeholder="Parastatal Name" required="true"/>
+                        </div>
+                        <div class="col-md-12" th:if="${userType=='4'}">
+                           <div> <input name="name" type="text" class="form-control" placeholder="Private Company Name" required="true"/>
+                        </div>							
+                        </div>
+                    </div>
+
+                    <div th:if="${userType!=null}" class="row m-b-15">
+                        <div class="col-md-12" th:if="${userType=='4'}">
+                            <div class="col-md-12">
+                                <input name="companyRegistration" type="text" class="form-control" placeholder="Company Registration Number" required="true"/>
+                            </div>
+                        </div>
+                     </div>
+
+
+                    <label class="control-label">Contacts <span class="text-danger">*</span></label>
+                    <div class="row row-space-10">
+                        <div class="col-md-6 m-b-15">
+                            <input type="text" name="phoneNumber" class="form-control" placeholder="Phone Number" required="true"/>
+                        </div>
+                        <div class="col-md-6 m-b-15">
+                            <input type="text" name="emailAddress" class="form-control" placeholder="Email Address" required="true"/>
+                        </div>
+                    </div>
+                    <div class="row row-space-10">
+                        <div class="col-md-6 m-b-15 ">
+                            <input type="file" name="pic" accept="image/*" required="true"/> Maximum Image Size 1MB
+                        </div>
+                    </div>
+                  <!--<div class="checkbox m-b-30">-->
+                        <!--<label>-->
+                            <!--<input type="checkbox" name="smsNotification" required="false"/> Click if you would like to receive notifications via sms-->
+                        <!--</label>-->
+                    <!--</div>-->
+                    <div class="checkbox m-b-30">
+                        <label>
+                            <input type="checkbox" name="emailNotification" required="true"/> Click to agree to receive notifications via e-mail
+                        </label>
+                    </div>
+                    <div class="checkbox m-b-30">
+                        <label>
+                            <input type="checkbox" name="termsAndConditions" required="true"/> By clicking Sign Up, you agree to our <a href="#">Terms</a>
+                            and that you have read our <a href="#">Data Policy</a>, including our <a href="#">Cookie
+                            Use</a>.
+                        </label>
+                    </div>
+                    <div class="register-buttons">
+                        <button   name="actions" value="register" type="submit" class="btn btn-primary btn-block btn-lg">
+                            Sign Up
+                        </button>
+                        <!--<noscript><input type="submit" value="Submit"/></noscript>-->
+                    </div>
+                    <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                        Already a member? Click <a href="login">here</a> to login.
+                    </div>
+                    <hr/>
+                    <p class="text-center">
+                        Copyright &copy; 2018 Lothmas. All rights reserved.
+                    </p>
+                </form>
+            </div>
+            <!-- end register-content -->
+        </div>
+        <!-- end right-content -->
+    </div>
+    <!-- end register -->
+
+</div>
+<!-- end page container -->
+
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+<script src="assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+<script src="assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--[if lt IE 9]>
+<script src="assets/crossbrowserjs/html5shiv.js"></script>
+<script src="assets/crossbrowserjs/respond.min.js"></script>
+<script src="assets/crossbrowserjs/excanvas.min.js"></script>
+<![endif]-->
+<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="assets/plugins/jquery-cookie/jquery.cookie.js"></script>
+<!-- ================== END BASE JS ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="assets/js/apps.min.js"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+
+<script>
+    $(document).ready(function () {
+        App.init();
+    });
+</script>
+</body>
+</html>
