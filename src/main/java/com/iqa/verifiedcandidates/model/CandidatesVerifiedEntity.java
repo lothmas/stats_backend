@@ -23,6 +23,7 @@ public class CandidatesVerifiedEntity {
     private Integer outcome;
     private Integer progressStatus;
     private Date updateDate;
+    private int requesterId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -53,6 +54,17 @@ public class CandidatesVerifiedEntity {
     public void setInstitution(int institution) {
         this.institution = institution;
     }
+
+    @Basic
+    @Column(name = "requester_id", nullable = false)
+    public int getRequesterId() {
+        return requesterId;
+    }
+
+    public void setRequesterId(int requesterId) {
+        this.requesterId = requesterId;
+    }
+
 
     @Basic
     @Column(name = "enabled", nullable = false, length = 45)
