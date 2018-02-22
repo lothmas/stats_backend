@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html xmlns:th="http://www.thymeleaf.org" lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+	<title>E - Verify | Invoice</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
+	<link href="assets/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="assets/css/animate.min.css" rel="stylesheet" />
+	<link href="assets/css/style.min.css" rel="stylesheet" />
+	<link href="assets/css/style-responsive.min.css" rel="stylesheet" />
+	<link href="assets/css/theme/default.css" rel="stylesheet" id="theme" />
+
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet"/>
+    <![endif]-->
+
+</head>
+<body class="no-skin" th:each="result: *{profile}">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade in"><span class="spinner"></span></div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed" >
+		<!-- begin #header -->
+		<div id="header" class="header navbar navbar-default navbar-fixed-top" >
+			<!-- begin container-fluid -->
+			<div class="container-fluid">
+				<!-- begin mobile sidebar expand / collapse button -->
+				<div class="navbar-header">
+					<a href="index" class="navbar-brand">
+                        <span class="navbar-logo"></span> E - Verify
+                        <!--<span class="logo-icon"><i><img src="frontend/assets/img/everify-transparent2.png"/></i></span>-->
+
+                    </a>
+
+					<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<!-- end mobile sidebar expand / collapse button -->
+				
+				<!-- begin header navigation right -->
+				<ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form class="navbar-form full-width" action="#" data-th-action="@{./login}" th:object="${login}"
+                              method="post"
+                              enctype="multipart/form-data">
+                            <!--<select class="form-control" id="status" name="username" th:each="authoriseAccounts, iterateShares : ${userAuthorisedAccounts}">-->
+                                <!--<option th:each="sharesFrom, iterateSharesFrom : ${authoriseAccounts.shareFrom}"-->
+                                        <!--th:value="${sharesFrom.username}"-->
+                                        <!--th:text="${sharesFrom.username}"-->
+                                        <!--th:selected="${sharesFrom.username.contains(sharesFrom.username)}"/>-->
+                            <!--</select>-->
+
+                            <!--<button name="action" value="switch_user" type="submit" class="btn btn-success btn-sm">switch-->
+                                <!--user-->
+                            <!--</button>-->
+
+                        </form>
+
+                    </li>
+					<li class="dropdown">
+						<a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+							<i class="fa fa-bell-o"></i>
+							<span class="label">5</span>
+						</a>
+						<ul class="dropdown-menu media-list pull-right animated fadeInDown">
+                            <li class="dropdown-header">Notifications (1)</li>
+                            <li class="media">
+                                <a href="javascript:;">
+                                    <div class="media-left"><i class="fa fa-bug media-object bg-red"></i></div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">Verification For Moses Completed</h6>
+                                        <div class="text-muted f-s-11">3 minutes ago</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <!--<li class="media">-->
+                                <!--<a href="javascript:;">-->
+                                    <!--<div class="media-left"><img src="assets/img/user-1.jpg" class="media-object" alt="" /></div>-->
+                                    <!--<div class="media-body">-->
+                                        <!--<h6 class="media-heading">John Smith</h6>-->
+                                        <!--<p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>-->
+                                        <!--<div class="text-muted f-s-11">25 minutes ago</div>-->
+                                    <!--</div>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="media">-->
+                                <!--<a href="javascript:;">-->
+                                    <!--<div class="media-left"><img src="assets/img/user-2.jpg" class="media-object" alt="" /></div>-->
+                                    <!--<div class="media-body">-->
+                                        <!--<h6 class="media-heading">Olivia</h6>-->
+                                        <!--<p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>-->
+                                        <!--<div class="text-muted f-s-11">35 minutes ago</div>-->
+                                    <!--</div>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="media">-->
+                                <!--<a href="javascript:;">-->
+                                    <!--<div class="media-left"><i class="fa fa-plus media-object bg-green"></i></div>-->
+                                    <!--<div class="media-body">-->
+                                        <!--<h6 class="media-heading"> New User Registered</h6>-->
+                                        <!--<div class="text-muted f-s-11">1 hour ago</div>-->
+                                    <!--</div>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="media">-->
+                                <!--<a href="javascript:;">-->
+                                    <!--<div class="media-left"><i class="fa fa-envelope media-object bg-blue"></i></div>-->
+                                    <!--<div class="media-body">-->
+                                        <!--<h6 class="media-heading"> New Email From John</h6>-->
+                                        <!--<div class="text-muted f-s-11">2 hour ago</div>-->
+                                    <!--</div>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="dropdown-footer text-center">-->
+                                <!--<a href="javascript:;">View more</a>-->
+                            <!--</li>-->
+						</ul>
+					</li>
+					<li class="dropdown navbar-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                            <img th:src="@{'data:image/jpeg;base64,'+${result.picture}}"
+                                 alt="no profile pic set"/>
+                            <span class="hidden-xs" th:text="${result.username}"/> <b class="caret"></b>
+                        </a>
+						<ul class="dropdown-menu animated fadeInLeft">
+							<li class="arrow"></li>
+							<!--<li><a th:href="@{/edit_profile}">Edit Profile</a></li>-->
+							<!--<li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>-->
+							<!--<li><a href="javascript:;">Calendar</a></li>-->
+							<!--<li><a href="javascript:;">Setting</a></li>-->
+							<li class="divider"></li>
+							<li><a th:href="@{/logout}">Log Out</a></li>
+						</ul>
+					</li>
+				</ul>
+				<!-- end header navigation right -->
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end #header -->
+		
+		<!-- begin #sidebar -->
+				<div id="sidebar" class="sidebar sidebar-transparent">
+			<!-- begin sidebar scrollbar -->
+			<div data-scrollbar="true" data-height="100%">
+				<!-- begin sidebar user -->
+				<ul class="nav">
+					<li class="nav-profile">
+						<div class="image">
+							<a href="javascript:;"><img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" alt="no profile pic set" /></a>
+						</div>
+						<div class="info" th:text="${result.username}"/>
+					</li>
+				</ul>
+				<!-- end sidebar user -->
+				<!-- begin sidebar nav -->
+                <ul class="nav">
+                    <li class="nav-header">Navigation</li>
+
+                    <li><a th:href="@{/profile.html}">
+                        <i class="active fa fa-laptop"></i>
+                        <span>Profile</span>
+                    </a></li>
+
+                    <li >
+                        <a th:href="@{/verification}">
+                            <i class="fa fa-address-card"></i>
+                            <span>Verification</span>
+                        </a>
+                    </li>
+
+                    <li ><a th:href="@{/cart}">
+                        <i class="fa fa-share-square-o "></i>
+                        <span>Top-Up Account</span>
+                    </a></li>
+
+
+
+                    <li >
+                        <a th:href="@{/invoice}">
+                            <i class="fa fa-address-card"></i>
+                            <span>Invoice / History </span>
+                        </a>
+                    </li>
+                                 <!-- end sidebar minify button -->
+                </ul>
+				<!-- end sidebar nav -->
+			</div>
+			<!-- end sidebar scrollbar -->
+		</div>
+		<!-- end #content -->
+        <div class="sidebar-bg"></div>
+        <!-- end #sidebar -->
+
+        <!-- begin #content -->
+        <div id="content" class="content">
+            <!-- begin breadcrumb -->
+            <ol class="breadcrumb hidden-print pull-right">
+                <li><a href="javascript:;">Home</a></li>
+                <li class="active">Invoice</li>
+            </ol>
+            <!-- end breadcrumb -->
+            <!-- begin page-header -->
+            <h1 class="page-header hidden-print">Invoice / History</h1>
+            <!-- end page-header -->
+
+            <!-- begin invoice -->
+            <div class="invoice">
+                <div class="invoice-company">
+                    <span class="pull-right hidden-print">
+                    <a href="javascript:;" class="btn btn-sm btn-success m-b-10"><i class="fa fa-download m-r-5"></i> Export as PDF</a>
+                    <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10"><i class="fa fa-print m-r-5"></i> Print</a>
+                    </span>
+                    <a th:text="${'Username: '+ #strings.toUpperCase(result.name)}"></a>
+                </div>
+                <div class="invoice-header" >
+                    <div class="invoice-to">
+                        <img src="frontend/assets/img/everify-transparent2.png"/>
+                    </div>
+                    <div class="invoice-date">
+                        <small>Invoice / History Period</small>
+                        <div class="date m-t-5" th:text="${beginDate +'  -  '+nowDate}"></div>
+                        <div class="invoice-detail">
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice-content">
+                    <div class="table-responsive">
+                        <table class="table table-invoice" >
+                            <thead>
+                            <tr>
+                                <th>CANDIDATE-ID</th>
+                                <th>INSTITUTE</th>
+                                <th>REQUEST DATE</th>
+                                <th>AMOUNT</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="verificationRequests: *{verificationRequests}">
+
+                                <td th:text="${#strings.toUpperCase(verificationRequests.getCandidateNumber())}"/>
+                                <td th:each="institutes: *{institutes}" th:if="${institutes.id==verificationRequests.getInstitute()}">
+                                    <div th:text="${#strings.toUpperCase(institutes.name)}"></div> </td>
+                                <td th:text="${#strings.toUpperCase(verificationRequests.getRequestDate())}"/>
+                                <td th:text="${#strings.toUpperCase(verificationRequests.getAmountPaid())}"/>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="invoice-price">
+                        <div class="invoice-price-left">
+                            <div class="invoice-price-row">
+                                <div class="sub-price">
+                                    <small>Total Amount Charged on Authentication Requests Made</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invoice-price-right">
+                            <small>TOTAL</small><a th:text="${'$ '+total}"></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="invoice-footer text-muted">
+                    <p class="text-center m-b-5">
+                        THANK YOU FOR YOUR BUSINESS
+                    </p>
+                    <p class="text-center">
+                        <span class="m-r-10"><i class="fa fa-globe"></i> everify-lothmas@outlook.com</span>
+                        <span class="m-r-10"><i class="fa fa-phone"></i> T:+27-780915010</span>
+                    </p>
+                </div>
+            </div>
+            <!-- end invoice -->
+        </div>
+
+		
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+	<script src="assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+	<script src="assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+	<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<!--[if lt IE 9]>
+		<script src="assets/crossbrowserjs/html5shiv.js"></script>
+		<script src="assets/crossbrowserjs/respond.min.js"></script>
+		<script src="assets/crossbrowserjs/excanvas.min.js"></script>
+	<![endif]-->
+	<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="assets/plugins/jquery-cookie/jquery.cookie.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	
+	<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+	<script src="assets/js/apps.min.js"></script>
+	<!-- ================== END PAGE LEVEL JS ================== -->
+
+    <script src="assets/js/jquery.easypiechart.min.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			App.init();
+		});
+	</script>
+
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        // <![CDATA[
+        jQuery(function ($) {
+
+
+            $('.easy-pie-chart.percentage').each(function () {
+                var barColor = $(this).data('color') || '#555';
+                var trackColor = '#E2E2E2';
+                var size = parseInt($(this).data('size')) || 72;
+                $(this).easyPieChart({
+                    barColor: barColor,
+                    trackColor: trackColor,
+                    scaleColor: false,
+                    lineCap: 'butt',
+                    lineWidth: parseInt(size / 10),
+                    animate: false,
+                    size: size
+                }).css('color', barColor);
+            });
+
+
+
+        });
+        // ]]>
+    </script>
+
+
+</body>
+</html>
+
+
+

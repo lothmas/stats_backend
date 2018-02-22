@@ -26,6 +26,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -77,13 +80,13 @@ public class VerificationController {
         int index = url.lastIndexOf("/");
         if (index != -1) {
             if (url.contains("profile")) {
-                ProfileEntity existing=new ProfileEntity();
+                ProfileEntity existing = new ProfileEntity();
                 try {
-                     existing=(ProfileEntity) session.getAttribute("profile");
+                    existing = (ProfileEntity) session.getAttribute("profile");
                     profileEntity = profilesService.findUserByUserId(existing.getId());
                 } catch (ProfilesNotFoundException e) {
                     e.printStackTrace();
-                } 
+                }
                 model.addAttribute("profile", profileEntity);
                 model.addAttribute("alertMessage", null);
                 ProfileEntity profileEntity1 = (ProfileEntity) session.getAttribute("profile");
@@ -261,20 +264,25 @@ public class VerificationController {
                     verificationRequestEntity.setRequestDate(date);
                     verificationRequestEntity.setRequesterId(profiles.getId());
                     try {
-                        verificationRequestService.saveVerificationRequest(verificationRequestEntity);
                         ProfileEntity profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
                         if (profileEntity1.getUserType().equals("1")) {
                             profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 5);
+                            verificationRequestEntity.setAmountPaid(5.00);
                         }
                         if (profileEntity1.getUserType().equals("2")) {
                             profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 10);
+                            verificationRequestEntity.setAmountPaid(10.00);
                         }
                         if (profileEntity1.getUserType().equals("3")) {
                             profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 15);
+                            verificationRequestEntity.setAmountPaid(15.00);
                         }
                         if (profileEntity1.getUserType().equals("4")) {
                             profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 20);
+                            verificationRequestEntity.setAmountPaid(20.00);
                         }
+
+                        verificationRequestService.saveVerificationRequest(verificationRequestEntity);
                         profilesService.saveUser(profileEntity1);
                     } catch (Exception e2) {
                         model.addAttribute("errorMessage", "Request Not Successfully Sent");
@@ -306,7 +314,7 @@ public class VerificationController {
 
     }
 
-    @RequestMapping(value = {"/payment", "/cart", "/complete"})
+    @RequestMapping(value = {"/payment", "/cart", "/complete", "/invoice"})
     public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
         String url = request.getRequestURI();
@@ -341,8 +349,8 @@ public class VerificationController {
             } else if (url.contains("complete")) {
                 model.addAttribute("profile", session.getAttribute("profile"));
                 try {
-                    ProfileEntity profileEntity1=profilesService.findUserByUserId(profileEntity.getId());
-                    profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount()+(Double)session.getAttribute("amountCredited"));
+                    ProfileEntity profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
+                    profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() + (Double) session.getAttribute("amountCredited"));
                     long time = System.currentTimeMillis();
                     java.sql.Date date = new java.sql.Date(time);
                     profileEntity1.setTopUpDate(date);
@@ -355,11 +363,39 @@ public class VerificationController {
                 model.addAttribute("amountCredited", session.getAttribute("amountCredited"));
 
                 return "complete";
+            } else if (url.contains("invoice")) {
+                try {
+                    ProfileEntity profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
+                    model.addAttribute("profile", profileEntity1);
+                    List<VerificationRequestEntity> verificationRequestEntities = verificationRequestService.getVerificationRequestByUserId(profileEntity.getId());
+                    model.addAttribute("verificationRequests", verificationRequestEntities);
+
+                    model.addAttribute("institutes", institutesService.getAllInstitutes());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date beginDate = sdf.parse(ZonedDateTime.now().withDayOfMonth(1).toString().substring(0, 10));
+                    model.addAttribute("beginDate", beginDate);
+                    model.addAttribute("nowDate", new Date());
+
+                    double total = 0;
+                    for (VerificationRequestEntity verificationRequestEntity1 : verificationRequestEntities) {
+                        total = total + verificationRequestEntity1.getAmountPaid();
+                    }
+
+                    model.addAttribute("total", total);
+                    return "invoice";
+                } catch (ProfilesNotFoundException e) {
+                    e.printStackTrace();
+                } catch (VerificationRequestNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (InstitutesNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
 
             return "profile";
         }
-
         return url;
     }
 }

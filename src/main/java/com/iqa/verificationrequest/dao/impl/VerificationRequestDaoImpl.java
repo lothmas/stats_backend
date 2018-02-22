@@ -14,6 +14,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -90,6 +94,34 @@ public class VerificationRequestDaoImpl extends AbstractDaoImpl<VerificationRequ
         }
 
         return results;
+    }
+
+    @Override
+    public List<VerificationRequestEntity> getVerificationRequestByUserId(int userId) throws VerificationRequestNotFoundException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date beginDate = sdf.parse(ZonedDateTime.now().withDayOfMonth(1).toString().substring(0, 10));
+
+
+        long time = System.currentTimeMillis();
+        List<VerificationRequestEntity> results = this.getCurrentSession().createCriteria(VerificationRequestEntity.class)
+                .add(Restrictions.eq("requesterId", userId))
+                .add(Restrictions.eq("enabled", 1))
+                .add(Restrictions.between("requestDate", beginDate, new Date()))
+                .list();
+
+
+        if (results.isEmpty()) {
+            throw new VerificationRequestNotFoundException("No VerificationRequest found ");
+        }
+
+        return results;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
 

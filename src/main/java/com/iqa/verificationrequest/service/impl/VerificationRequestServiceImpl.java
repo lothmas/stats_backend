@@ -51,6 +51,11 @@ public class VerificationRequestServiceImpl implements VerificationRequestServic
         return this.VerificationRequestDao.getVerificationRequestByCountry(countryId);
     }
 
+    @Override
+    public List<VerificationRequestEntity> getVerificationRequestByUserId(int userId) throws VerificationRequestNotFoundException {
+        return this.VerificationRequestDao.getVerificationRequestByUserId(userId);
+    }
+
 
 }
 

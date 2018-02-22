@@ -21,5 +21,7 @@ public interface VerificationRequestDao extends AbstractDao<VerificationRequestE
     VerificationRequestEntity VerificationRequestCandidateIdAndInstituteIdAndUserId(String candidateId, int instituteId, int requesterId) throws VerificationRequestNotFoundException;
     List<VerificationRequestEntity> getAllVerificationRequest() throws VerificationRequestNotFoundException;
     public List<VerificationRequestEntity> getVerificationRequestByCountry(int countryId) throws VerificationRequestNotFoundException;;
+    List<VerificationRequestEntity> getVerificationRequestByUserId(int userId) throws VerificationRequestNotFoundException;
+
 }
 

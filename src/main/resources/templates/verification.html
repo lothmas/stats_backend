@@ -170,10 +170,17 @@
 				<ul class="nav">
 					<li class="nav-header">Navigation</li>
 
-					<li><a  th:href="@{/profile}">
+					<li><a th:href="@{/profile.html}">
 						<i class="active fa fa-laptop"></i>
 						<span>Profile</span>
 					</a></li>
+
+					<li >
+						<a th:href="@{/verification}">
+							<i class="fa fa-address-card"></i>
+							<span>Verification</span>
+						</a>
+					</li>
 
 					<li ><a th:href="@{/cart}">
 						<i class="fa fa-share-square-o "></i>
@@ -183,9 +190,9 @@
 
 
 					<li >
-						<a>
+						<a th:href="@{/invoice}">
 							<i class="fa fa-address-card"></i>
-							<span>View Invoice / History </span>
+							<span>Invoice / History </span>
 						</a>
 					</li>
 					<!-- end sidebar minify button -->

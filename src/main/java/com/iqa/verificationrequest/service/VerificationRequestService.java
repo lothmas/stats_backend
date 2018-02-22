@@ -23,5 +23,7 @@ public interface VerificationRequestService {
 
     List<VerificationRequestEntity> getAllVerificationRequest() throws VerificationRequestNotFoundException;
     public List<VerificationRequestEntity> getVerificationRequestByCountry(int countryId)  throws VerificationRequestNotFoundException;
+    List<VerificationRequestEntity> getVerificationRequestByUserId(int userId) throws VerificationRequestNotFoundException;
+
 }
 
