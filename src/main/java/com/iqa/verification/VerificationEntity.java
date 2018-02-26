@@ -7,7 +7,7 @@ import java.sql.Date;
  * Created by louis on 2018/02/09.
  */
 @Entity
-@Table(name = "verification", schema = "iqa-16-05-2017", catalog = "")
+@Table(name = "verification", schema = "", catalog = "")
 public class VerificationEntity {
     private int id;
     private String candidateNumber;

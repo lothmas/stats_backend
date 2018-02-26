@@ -4,7 +4,7 @@ package com.iqa.domain.countries.model;
  * Created by louis on 2018/02/09.
  */
 @javax.persistence.Entity
-@javax.persistence.Table(name = "countries", schema = "iqa-16-05-2017", catalog = "")
+@javax.persistence.Table(name = "countries", schema = "", catalog = "")
 public class Countries {
     private int id;
     private String code;
