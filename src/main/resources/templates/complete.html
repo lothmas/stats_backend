@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html xmlns:th="http://www.thymeleaf.org" lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>Everify | Complete</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="checkout/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="checkout/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="checkout/assets/css/style.min.css" rel="stylesheet" />
+    <link href="checkout/assets/css/style-responsive.min.css" rel="stylesheet" />
+    <link href="checkout/assets/css/theme/default.css" id="theme" rel="stylesheet" />
+    <link href="checkout/assets/css/animate.min.css" rel="stylesheet" />
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="checkout/assets/plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="bg-silver" th:each="result: *{profile}">
+<!-- BEGIN #page-container -->
+<div id="page-container" class="fade">
+    <!-- BEGIN #top-nav -->
+
+    <!-- END #top-nav -->
+
+    <!-- BEGIN #header -->
+    <div id="header" class="header">
+        <!-- BEGIN container -->
+        <div class="container">
+            <!-- BEGIN header-container -->
+            <div class="header-container">
+                <!-- BEGIN navbar-header -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="header-logo">
+                        <a href="index.html">
+                            <span class="logo-icon"><i><img src="frontend/assets/img/everify-transparent2.png"/></i></span>
+                            <small>electronic payments</small>
+                        </a>
+                    </div>
+                </div>
+                <!-- END navbar-header -->
+                <!-- BEGIN header-nav -->
+                <div class="header-nav">
+                    <div class=" collapse navbar-collapse" id="navbar-collapse">
+                        <ul class="nav">
+                            <li><a th:href="@{/profile}">Profile</a></li>
+                            <li><a th:href="@{/verification}">Verifications</a></li>
+                            <li><a href="#">Invoice</a></li>
+
+
+
+
+                        </ul>
+                    </div>
+                </div>
+                <!-- END header-nav -->
+                <!-- BEGIN header-nav -->
+                <div class="header-nav">
+                    <ul class="nav pull-right">
+
+                        <li class="divider"></li>
+                        <li>
+                            <a th:href="@{/logout}">
+                                <img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" class="user-img" alt="" />
+                                <span  class="hidden-md hidden-sm hidden-xs">Log-Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END header-nav -->
+            </div>
+            <!-- END header-container -->
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END #header -->
+
+    <!-- BEGIN #checkout-cart -->
+    <div class="section-container" id="checkout-cart">
+        <!-- BEGIN container -->
+        <div class="container">
+            <!-- BEGIN checkout -->
+            <div class="checkout">
+                <form action="checkout_info.html" method="POST" name="form_checkout">
+                    <!-- BEGIN checkout-header -->
+                    <div class="checkout-header">
+                        <!-- BEGIN row -->
+                        <div class="row">
+                            <!-- BEGIN col-3 -->
+                            <div class="col-md-3 col-sm-3">
+                                <div class="step">
+                                    <a href="#">
+                                        <div class="number">1</div>
+                                        <div class="info">
+                                            <div class="title">CheckOut</div>
+                                            <div class="desc">Calculate How Much To Pay</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- END col-3 -->
+                            <!-- BEGIN col-3 -->
+                            <!-- END col-3 -->
+                            <!-- BEGIN col-3 -->
+                            <div class="col-md-3 col-sm-3">
+                                <div class="step">
+                                    <a href="#">
+                                        <div class="number">3</div>
+                                        <div class="info">
+                                            <div class="title">Payment</div>
+                                            <div class="desc">Make Payment </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- END col-3 -->
+                            <!-- BEGIN col-3 -->
+                            <div class="col-md-3 col-sm-3">
+                                <div class="step active">
+                                    <a href="#">
+                                        <div class="number">4</div>
+                                        <div class="info">
+                                            <div class="title">Complete Payment</div>
+                                            <div class="desc">Finish Payment</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- END col-3 -->
+                        </div>
+                        <!-- END row -->
+                    </div>
+                    <!-- END checkout-header -->
+                    <!-- BEGIN checkout-body -->
+                    <div class="checkout-body">
+                        <!-- BEGIN checkout-message -->
+                        <div class="checkout-message">
+                            <h1>Thank you! <small>Your Payment has been successfully processed with the following details.</small></h1>
+                            <div class="table-responsive2">
+                                <table class="table table-payment-summary">
+                                    <tbody>
+                                    <tr>
+                                        <td class="field">Transaction Status</td>
+                                        <td class="value">Success</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Transaction Reference No.</td>
+                                        <td class="value">REF000001</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Bank Authorised Code</td>
+                                        <td class="value">AUTH000001</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Transaction Date and Time</td>
+                                        <td class="value"> <span id="time"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Payment</td>
+                                        <td class="value product-summary">
+                                            <div class="product-summary-img">
+                                                <img src="frontend/assets/img/everify-transparent2.png"/>
+                                            </div>
+                                            <div class="product-summary-info">
+                                                <div class="title">Thank You For Crediting Your Everify Account</div>
+                                                <div class="desc">Your Account Has Been Updated in RealTime</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field">Payment Amount (USD)</td>
+                                        <td class="value" th:text="${'$'+amountCredited}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-muted text-center m-b-0">Should you require any assistance, you can get in touch with Support Team at (+27) 780915010</p>
+                        </div>
+                        <!-- END checkout-message -->
+                    </div>
+                    <!-- END checkout-body -->
+                    <!-- BEGIN checkout-footer -->
+
+                    <!-- END checkout-footer -->
+                </form>
+            </div>
+            <!-- END checkout -->
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END #checkout-cart -->
+
+    <!-- BEGIN #policy -->
+
+    <!-- END #policy -->
+
+    <!-- BEGIN #footer -->
+
+    <!-- END #footer -->
+
+    <!-- BEGIN #footer-copyright -->
+    <div id="footer-copyright" class="footer-copyright">
+        <!-- BEGIN container -->
+        <div class="container">
+            <div class="payment-method">
+                <img src="checkout/assets/img/payment_method.png" alt="" />
+            </div>
+            <div class="copyright">
+                Copyright &amp;copy; Lothmas 2018 All rights reserved.
+            </div>
+        </div>
+        <!-- END container -->
+    </div>
+    <!-- END #footer-copyright -->
+</div>
+<!-- END #page-container -->
+
+<!-- begin theme-panel -->
+
+<!-- end theme-panel -->
+
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="checkout/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+<script src="checkout/assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+<script src="checkout/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--[if lt IE 9]>
+<script src="checkout/assets/crossbrowserjs/html5shiv.js"></script>
+<script src="checkout/assets/crossbrowserjs/respond.min.js"></script>
+<script src="checkout/assets/crossbrowserjs/excanvas.min.js"></script>
+<![endif]-->
+<script src="checkout/assets/plugins/jquery-cookie/jquery.cookie.js"></script>
+<script src="checkout/assets/js/apps.min.js"></script>
+<!-- ================== END BASE JS ================== -->
+
+<script>
+    $(document).ready(function() {
+        App.init();
+    });
+</script>
+<script>
+    var today = new Date();
+    document.getElementById('time').innerHTML=today;
+</script>
+</body>
+</html>
