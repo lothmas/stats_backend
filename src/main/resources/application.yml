@@ -27,6 +27,11 @@
 # connection. In this example we have "netgloo_blog" as database name and
 # "root" as username and password.
 spring:
+  http:
+      multipart:
+          max-file-size: 20MB
+          max-request-size: 20MB
+
   datasource:
     driver: com.mysql.jdbc.Driver
     url: jdbc:mysql://us-cdbr-iron-east-05.cleardb.net:3306/heroku_4f505d74d346cca?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
@@ -64,3 +69,4 @@ security:
 
   thymeleaf:
     prefix: classpath:/templates
+

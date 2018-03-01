@@ -19,6 +19,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
+.my-group .form-control{
+  width:50%;
+}
 
 .animated.infinite {
   -webkit-animation-iteration-count: infinite;
