@@ -21,10 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,27 +99,34 @@ public class VerificationController {
                 }
                 return "profile";
             } else if (url.contains("verification_login")) {
-                try {
-                    profileEntity = profilesService.findProfileByUsernameAndPassword(username, password);
-                    model.addAttribute("countryName", countriesService.findByCountryId(profileEntity.getCountryId()).getName());
-                    model.addAttribute("profile", profileEntity);
-                    session.setAttribute("profile", profileEntity);
-                    model.addAttribute("alertMessage", null);
-
-                    return "profile";
-                } catch (ProfilesNotFoundException | NoSuchAlgorithmException e) {
-                    redirectAttributes.addFlashAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
-                    model.addAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
-                    return "redirect:login";
-                } catch (CountryNotFoundException e) {
-                    e.printStackTrace();
-                }
+                String x = login(model, session, username, password, redirectAttributes);
+                if (x != null) return x;
             }
 
 
         }
 
         return "profile";
+    }
+
+    public String login(Model model, HttpSession session, @RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, RedirectAttributes redirectAttributes) {
+        ProfileEntity profileEntity;
+        try {
+            profileEntity = profilesService.findProfileByUsernameAndPassword(username, password);
+            model.addAttribute("countryName", countriesService.findByCountryId(profileEntity.getCountryId()).getName());
+            model.addAttribute("profile", profileEntity);
+            session.setAttribute("profile", profileEntity);
+            model.addAttribute("alertMessage", null);
+
+            return "profile";
+        } catch (ProfilesNotFoundException | NoSuchAlgorithmException e) {
+            redirectAttributes.addFlashAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
+            model.addAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
+            return "redirect:login";
+        } catch (CountryNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @RequestMapping(value = {"/verification"}, method = RequestMethod.GET)
@@ -386,7 +395,8 @@ public class VerificationController {
                 } catch (ProfilesNotFoundException e) {
                     e.printStackTrace();
                 } catch (VerificationRequestNotFoundException e) {
-                    e.printStackTrace();
+                   model.addAttribute("errorMessage","No Previous Requests Made this Month");
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (InstitutesNotFoundException e) {
@@ -398,4 +408,29 @@ public class VerificationController {
         }
         return url;
     }
+
+
+    @RequestMapping(value = {"/upload"})
+    public String upload(HttpServletRequest request, Model model, HttpSession session,@RequestParam(value = "file", required = false) MultipartFile file) {
+        String url = request.getRequestURI();
+        model.addAttribute("profile", session.getAttribute("profile"));
+        int index = url.lastIndexOf("/");
+        if (index != -1) {
+            if (null!=file) {
+                try {
+                    byte[] bytes = file.getBytes();
+                    String completeData = new String(bytes);
+                    String[] rows = completeData.split("#");
+                    String[] columns = rows[0].split(",");
+                    String add = "er";
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+                return "upload";
+
 }
+        return "upload";
+    }}

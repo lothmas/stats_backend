@@ -161,7 +161,7 @@ public class ProfileEntity {
     }
 
     @Basic
-    @Column(name = "picture", nullable = true, length = 50000)
+    @Column(name = "picture", nullable = true, length = 17000000)
     public String getPicture() {
         return picture;
     }

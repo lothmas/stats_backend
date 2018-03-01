@@ -21,6 +21,7 @@ import com.iqa.verifiedcandidates.service.VerifiedCandidatesService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,9 +31,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,6 +43,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
@@ -64,6 +69,11 @@ public class RegistrationController {
     @Autowired
     VerifiedCandidatesService verifiedCandidatesService;
 
+    @Autowired
+    VerificationController verificationController;
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^\\s*?(.+)@(.+?)\\s*$");
+    private static final Pattern USER_PATTERN = Pattern.compile("^\\s*(((\\\\.)|[^\\s\\p{Cntrl}\\(\\)<>@,;:'\\\\\\\"\\.\\[\\]]|')+|(\"(\\\\\"|[^\"])*\"))(\\.(((\\\\.)|[^\\s\\p{Cntrl}\\(\\)<>@,;:'\\\\\\\"\\.\\[\\]]|')+|(\"(\\\\\"|[^\"])*\")))*$");
 
     public static String byteToString(byte[] _bytes) {
         String file_string = "";
@@ -108,6 +118,32 @@ public class RegistrationController {
         try {
             if(userType!=null) {
                 if(countryId!=null) {
+
+
+
+
+                    boolean correctEmail = EmailValidator.getInstance().isValid(emailAddress);
+                    if(!correctEmail){
+                        model.addAttribute("alertMessage", "........Please Enter Valid Email-Address");
+                        model.addAttribute("countries", session.getAttribute("countries"));
+                        return"register";
+                    }
+                    try{
+                        if(phoneNumber.length()>14 || phoneNumber.contains("+")){
+                            model.addAttribute("alertMessage", "........Please Enter Numbers Only for Phone-Number");
+                            model.addAttribute("countries", session.getAttribute("countries"));
+                            return"register";
+                        }
+                        Integer phonenumber= Integer.valueOf(phoneNumber.trim());
+                    }
+                    catch (Exception exp){
+                        model.addAttribute("alertMessage", "........Please Enter Numbers Only Maximum 10 for Phone-Number");
+                        model.addAttribute("countries", session.getAttribute("countries"));
+                        return"register";
+                    }
+
+
+
                     if (profilesService.suppliedEmailExists(emailAddress)) {
                         model.addAttribute("alertMessage", "Provided Email-Address Already Exists ");
                         model.addAttribute("userType", userType);
@@ -131,6 +167,7 @@ public class RegistrationController {
             else{
                 List<Country> countries = countriesService.getAllCountries();
                 model.addAttribute("countries", countries);
+                model.addAttribute("alertMessage", "...... Select UserType ");
                 return "register";
             }
             model.addAttribute("countries", session.getAttribute("countries"));
@@ -175,6 +212,11 @@ public class RegistrationController {
                         profileEntity.setName(firstName + surname);
                     }
                     else {
+                        if(null==name){
+                            model.addAttribute("alertMessage", "........Please Reselect UserType");
+                            model.addAttribute("countries", session.getAttribute("countries"));
+                            return"register";
+                        }
                         profileEntity.setName(name);
                     }
                 }
@@ -185,14 +227,22 @@ public class RegistrationController {
                     model.addAttribute("countries", session.getAttribute("countries"));
                     model.addAttribute("alertMessage", "your image exceedes more than 1mb ");
                     return "register";
-                } catch (Exception e1) {
+                }
+                catch (ConstraintViolationException con){
                     model.addAttribute("countries", session.getAttribute("countries"));
-                    model.addAttribute("alertMessage", "something went wrong please contact E-Verify with error: "+e1.getMessage());
+                    model.addAttribute("alertMessage", "please limit you profile image to 16MB");
+                    return "register";
+                }
+                catch (Exception e1) {
+                    model.addAttribute("countries", session.getAttribute("countries"));
+                    model.addAttribute("alertMessage", "something went wrong please contact E-Verify with error: ");
                     return "register";
                 }
                 model.addAttribute("alertMessage", "your account was successfullyy created you can login");
 
-            }else{
+                RedirectAttributes redirectAttributes = null;
+                return verificationController.login( model, session, username,  password, redirectAttributes);
+                }else{
                 model.addAttribute("alertMessage", "please provide all required details");               
             }
             List<Country> countries = countriesService.getAllCountries();
@@ -201,6 +251,9 @@ public class RegistrationController {
             return "register";
         }
     }
+
+
+
 
 
 }

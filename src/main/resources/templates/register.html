@@ -20,6 +20,8 @@
     <link href="assets/css/style.min.css" rel="stylesheet"/>
     <link href="assets/css/style-responsive.min.css" rel="stylesheet"/>
     <link href="assets/css/theme/default.css" rel="stylesheet" id="theme"/>
+    <link rel="stylesheet" href="assets/country/build/css/intlTelInput.css"/>
+    <link rel="stylesheet" href="assets/country/build/css/demo.css"/>
     <!-- ================== END BASE CSS STYLE ================== -->
 
     <!-- ================== BEGIN BASE JS ================== -->
@@ -56,10 +58,11 @@
                 <span class="logo-icon"><i><img src="frontend/assets/img/everify-transparent2.png"/></i></span>
                 <small>Create your E - Verify Account</small>
             </h1>
-            <div class="alert alert-info row align-items-center justify-content-center" th:if="${alertMessage!=null}">
+            <div class="alert alert-danger row align-items-center justify-content-right" th:if="${alertMessage!=null}">
                 <div th:text="${alertMessage}">
                     <div><span class="glyphicon glyphicon-remove"></span>
-                        <small></small></div>
+                        <small></small>
+                    </div>
                 </div>
             </div>
             <!-- end register-header -->
@@ -113,82 +116,114 @@
                     <label class="control-label">Profile Details <span class="text-danger">*</span></label>
                     <div class="row row-space-10">
                         <div class="col-md-6 m-b-15">
-                            <input type="text" name="username" class="form-control" placeholder="username" required="true"/>
+                            <input type="text" name="username" class="form-control" placeholder="username"
+                                   required="true"/>
+                        </div>
+                    </div>
+                    <div class="row row-space-10">
+                        <div class="col-md-6 m-b-15">
+                            <input name="password" required="required" type="password" class="form-control"
+                                   title="Password must contain at least 6 characters, including UPPER/lowercase and numbers"
+                                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" onchange="
+  this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
+  if(this.checkValidity()) form.pwd2.pattern = RegExp.escape(this.value);
+" id="password" placeholder="password"/>
+                            <!--<input type="password" name="password" class="form-control" placeholder="password" required="true"/>-->
                         </div>
                         <div class="col-md-6 m-b-15">
-                            <input type="password" name="password" class="form-control" placeholder="Password" required="true"/>
+                            <input name="password_confirm" required="required" placeholder="confirm password"
+                                   type="password" id="password_confirm" oninput="check(this)"/>
+                            <!--<input name="password_confirm" class="form-control" placeholder="confirm password" required="true" type="password" id="password_confirm" oninput="check(this)"/>-->
                         </div>
                     </div>
 
 
-                    <label th:if="${userType!=null}" class="control-label">User Details <span class="text-danger">*</span></label>
+                    <label th:if="${userType!=null}" class="control-label">User Details <span
+                            class="text-danger">*</span></label>
                     <div class="row row-space-10" th:if="${userType=='1'}">
                         <div class="col-md-6 m-b-15">
-                            <input type="text" name="firstName" class="form-control" placeholder="First name" required="true"/>
+                            <input type="text" name="firstName" class="form-control" placeholder="First name"
+                                   required="true"/>
                         </div>
                         <div class="col-md-6 m-b-15">
-                            <input type="text" name="surname" class="form-control" placeholder="Last name" required="true"/>
+                            <input type="text" name="surname" class="form-control" placeholder="Last name"
+                                   required="true"/>
                         </div>
                         <div class="col-md-12">
-                            <input type="text" name="idNumber" class="form-control" placeholder="ID-Number" required="true"/>
+                            <input type="text" name="idNumber" class="form-control" placeholder="ID-Number"
+                                   required="true"/>
                         </div>
                     </div>
 
                     <div th:if="${userType!=null}" class="row m-b-15">
                         <div class="col-md-12" th:if="${userType=='2'}">
-                            <input type="text" name="name" class="form-control" placeholder="Government Ministry Name" required="true"/>
+                            <input type="text" name="name" class="form-control" placeholder="Government Ministry Name"
+                                   required="true"/>
                         </div>
                         <div class="col-md-12" th:if="${userType=='3'}">
-                            <input type="text" name="name" class="form-control" placeholder="Parastatal Name" required="true"/>
+                            <input type="text" name="name" class="form-control" placeholder="Parastatal Name"
+                                   required="true"/>
                         </div>
                         <div class="col-md-12" th:if="${userType=='4'}">
-                           <div> <input name="name" type="text" class="form-control" placeholder="Private Company Name" required="true"/>
-                        </div>							
+                            <div><input name="name" type="text" class="form-control" placeholder="Private Company Name"
+                                        required="true"/>
+                            </div>
                         </div>
                     </div>
 
                     <div th:if="${userType!=null}" class="row m-b-15">
                         <div class="col-md-12" th:if="${userType=='4'}">
                             <div class="col-md-12">
-                                <input name="companyRegistration" type="text" class="form-control" placeholder="Company Registration Number" required="true"/>
+                                <input name="companyRegistration" type="text" class="form-control"
+                                       placeholder="Company Registration Number" required="true"/>
                             </div>
                         </div>
-                     </div>
+                    </div>
 
 
                     <label class="control-label">Contacts <span class="text-danger">*</span></label>
                     <div class="row row-space-10">
-                        <div class="col-md-6 m-b-15">
-                            <input type="text" name="phoneNumber" class="form-control" placeholder="Phone Number" required="true"/>
+                        <div class="col-md-12 m-b-15">
+
+                            <div class="input-group my-group">
+                                <input id="phone" type="number" name="phoneNumber" placeholder="Phone Number"
+                                       pattern="[0-9]*"    minlength="6"  maxlength="14" required="true"/>
+                            </div>
+
                         </div>
-                        <div class="col-md-6 m-b-15">
-                            <input type="text" name="emailAddress" class="form-control" placeholder="Email Address" required="true"/>
+                        <div class="col-md-12 m-b-15">
+                            <input type="email" pattern="[^ @]*@[^ @]*" name="emailAddress" class="form-control"
+                                   placeholder="Email Address" required="true"/>
                         </div>
                     </div>
                     <div class="row row-space-10">
                         <div class="col-md-6 m-b-15 ">
-                            <input type="file" name="pic" accept="image/*" required="true"/> Maximum Image Size 1MB
+                            <span class="btn btn-file">Upload Profile Pic
+                            <input type="file" id="pic" name="pic" accept="image/*" required="true" class="inputfile"/>
+                            </span>
                         </div>
                     </div>
-                  <!--<div class="checkbox m-b-30">-->
-                        <!--<label>-->
-                            <!--<input type="checkbox" name="smsNotification" required="false"/> Click if you would like to receive notifications via sms-->
-                        <!--</label>-->
+                    <!--<div class="checkbox m-b-30">-->
+                    <!--<label>-->
+                    <!--<input type="checkbox" name="smsNotification" required="false"/> Click if you would like to receive notifications via sms-->
+                    <!--</label>-->
                     <!--</div>-->
                     <div class="checkbox m-b-30">
                         <label>
-                            <input type="checkbox" name="emailNotification" required="true"/> Click to agree to receive notifications via e-mail
+                            <input type="checkbox" name="emailNotification" required="true"/> Click to agree to receive
+                            notifications via e-mail
                         </label>
                     </div>
                     <div class="checkbox m-b-30">
                         <label>
-                            <input type="checkbox" name="termsAndConditions" required="true"/> By clicking Sign Up, you agree to our <a href="#">Terms</a>
+                            <input type="checkbox" name="termsAndConditions" required="true"/> By clicking Sign Up, you
+                            agree to our <a href="#">Terms</a>
                             and that you have read our <a href="#">Data Policy</a>, including our <a href="#">Cookie
                             Use</a>.
                         </label>
                     </div>
                     <div class="register-buttons">
-                        <button   name="actions" value="register" type="submit" class="btn btn-primary btn-block btn-lg">
+                        <button name="actions" value="register" type="submit" class="btn btn-primary btn-block btn-lg">
                             Sign Up
                         </button>
                         <!--<noscript><input type="submit" value="Submit"/></noscript>-->
@@ -232,6 +267,87 @@
 <script>
     $(document).ready(function () {
         App.init();
+    });
+</script>
+
+<script language='javascript' type='text/javascript'>
+    function check(input) {
+        if (input.value != document.getElementById('password').value) {
+            input.setCustomValidity('Password Must be Matching.');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
+</script>
+
+<!-- Load jQuery from CDN so can run demo immediately -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="assets/country/build/js/intlTelInput.js"></script>
+<script>
+    // <![CDATA[
+    $("#phone").intlTelInput({
+        // allowDropdown: false,
+        // autoHideDialCode: false,
+        // autoPlaceholder: "off",
+        // dropdownContainer: "body",
+        // excludeCountries: ["us"],
+        // formatOnDisplay: false,
+        // geoIpLookup: function(callback) {
+        //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+        //     var countryCode = (resp && resp.country) ? resp.country : "";
+        //     callback(countryCode);
+        //   });
+        // },
+        // hiddenInput: "full_number",
+        // initialCountry: "auto",
+        // nationalMode: false,
+        // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+        // placeholderNumberType: "MOBILE",
+        // preferredCountries: ['cn', 'jp'],
+        // separateDialCode: true,
+        utilsScript: "build/js/utils.js"
+    });
+    // ]]>
+</script>
+<script type="text/javascript">
+    // <![CDATA[
+    function checkPassword(str) {
+        var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+        return re.test(str);
+    }
+
+    function checkForm(form) {
+        if (form.username.value == "") {
+            alert("Error: Username cannot be blank!");
+            form.username.focus();
+            return false;
+        }
+        re = /^\w+$/;
+        if (!re.test(form.username.value)) {
+            alert("Error: Username must contain only letters, numbers and underscores!");
+            form.username.focus();
+            return false;
+        }
+        if (form.pwd1.value != "" && form.pwd1.value == form.pwd2.value) {
+            if (!checkPassword(form.pwd1.value)) {
+                alert("The password you have entered is not valid!");
+                form.pwd1.focus();
+                return false;
+            }
+        } else {
+            alert("Error: Please check that you've entered and confirmed your password!");
+            form.pwd1.focus();
+            return false;
+        }
+        return true;
+    }
+
+    // ]]>
+</script>
+<script>
+    $('#choose-file').inputFileText({
+        text: 'Upload Profile Image'
     });
 </script>
 </body>
