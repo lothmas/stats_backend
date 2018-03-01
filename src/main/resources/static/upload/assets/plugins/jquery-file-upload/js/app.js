@@ -38,7 +38,7 @@
                         disableImageResize: /Android(?!.*Chrome)|Opera/
                             .test(window.navigator.userAgent),
                         maxFileSize: 999000,
-                        acceptFileTypes: /(\.|\/)(xlsx|jpe?g|csv)$/i
+                        acceptFileTypes: /(\.|\/)(xlsx|xls|csv)$/i
                     });
                 }
             }

@@ -208,15 +208,17 @@
                         </p>
                     </blockquote>
                     <form id="fileupload" action="#" data-th-action="@{./upload}" method="POST" enctype="multipart/form-data">
+
                         <div class="row fileupload-buttonbar">
                             <div class="col-md-7">
                                 <span class="btn btn-success fileinput-button">
                                     <i class="fa fa-plus"></i>
                                     <span>Add files...</span>
-                            		<input type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel ,xlsx , xls,ods" required="true"/>
+                            		<input type="file" name="file"  multiple="true" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel ,xlsx , xls,ods" required="true" />
+
                                 </span>
-                                <button type="submit" class="btn btn-primary start">
-                                    <i class="fa fa-upload"></i>
+								 <button type="submit" class="btn btn-primary" >
+									<i class="fa fa-upload"></i>
                                     <span>Start upload</span>
                                 </button>
                                 <button type="reset" class="btn btn-warning cancel">
