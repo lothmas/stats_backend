@@ -17,6 +17,13 @@ import com.iqa.verificationrequest.service.VerificationRequestService;
 import com.iqa.verifiedcandidates.exception.VerifiedCandidatesNotFoundException;
 import com.iqa.verifiedcandidates.model.CandidatesVerifiedEntity;
 import com.iqa.verifiedcandidates.service.VerifiedCandidatesService;
+import com.opencsv.CSVReader;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,12 +33,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -160,9 +168,9 @@ public class VerificationController {
     @RequestMapping(value = {"/getInstitutions"}, method = RequestMethod.POST)
     public String getInstuteByCountryId(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId
             , @RequestParam(value = "instituteId", required = false) String instituteId, @RequestParam(value = "candidateId", required = false) String candidateId
-            , @RequestParam(value = "action", required = false) String action) {
+            , @RequestParam(value = "action", required = false) String action, @RequestParam(value = "option", required = false) String option) {
 
-
+        model.addAttribute("option",null);
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         model.addAttribute("errorMessage", null);
@@ -172,6 +180,21 @@ public class VerificationController {
             model.addAttribute("countries", session.getAttribute("countries"));
             model.addAttribute("searchButton", false);
             if (url.contains("getInstitutions") && candidateId == null && instituteId == null) {
+
+                if(option.equals("2")){
+                    model.addAttribute("option",2);
+                    try {
+                        List<InstitutesEntity> institutesEntities = institutesService.findInstitutesByUserType(2);
+                        model.addAttribute("institutes", institutesEntities);
+                        model.addAttribute("searchButton", false);
+                    } catch (InstitutesNotFoundException e) {
+                        model.addAttribute("institutes", null);
+                        model.addAttribute("searchButton", true);
+                        model.addAttribute("errorMessage", "No International Professional Institution Found");
+                    }
+
+                }else if(null!=countryId){
+
                 String[] spiltRequest = countryId.split(",");
                 try {
                     List<InstitutesEntity> institutesEntities = institutesService.getInstitutesByCountry(Integer.parseInt(spiltRequest[0]));
@@ -185,6 +208,8 @@ public class VerificationController {
 
                 model.addAttribute("selectedCountryName", spiltRequest[1]);
                 session.setAttribute("selectedCountryName", spiltRequest[1]);
+                }
+
                 return "verification";
             } else if (url.contains("getInstitutions") && candidateId != null && instituteId != null) {
                 verificationRequest(instituteId, candidateId, model, session);
@@ -194,8 +219,6 @@ public class VerificationController {
                 model.addAttribute("institutes", null);
                 model.addAttribute("errorMessage", "Please reselect your desired country");
                 model.addAttribute("searchButton", true);
-
-
             }
 
         }
@@ -255,11 +278,16 @@ public class VerificationController {
             } catch (VerificationRequestNotFoundException e1) {
 
                 ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
-
-                if (null == profileEntity.getBalanceAmount() || (profileEntity.getUserType().equals("1") && profileEntity.getBalanceAmount() < 5)
-                        || (profileEntity.getUserType().equals("2") && profileEntity.getBalanceAmount() < 10)
-                        || (profileEntity.getUserType().equals("3") && profileEntity.getBalanceAmount() < 15)
-                        || (profileEntity.getUserType().equals("4") && profileEntity.getBalanceAmount() < 20)) {
+                ProfileEntity profileEntity1 = null;
+                try {
+                    profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
+                } catch (ProfilesNotFoundException e2) {
+                    e2.printStackTrace();
+                }
+                if (null == profileEntity1.getBalanceAmount() || (profileEntity1.getUserType().equals("1") && profileEntity1.getBalanceAmount() < 5)
+                        || (profileEntity1.getUserType().equals("2") && profileEntity1.getBalanceAmount() < 10)
+                        || (profileEntity1.getUserType().equals("3") && profileEntity1.getBalanceAmount() < 15)
+                        || (profileEntity1.getUserType().equals("4") && profileEntity1.getBalanceAmount() < 20)) {
                     model.addAttribute("errorMessage", "You Can't Make An Authentication Request: Please Top-Up Your Account First");
                 } else {
 
@@ -273,7 +301,7 @@ public class VerificationController {
                     verificationRequestEntity.setRequestDate(date);
                     verificationRequestEntity.setRequesterId(profiles.getId());
                     try {
-                        ProfileEntity profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
+
                         if (profileEntity1.getUserType().equals("1")) {
                             profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 5);
                             verificationRequestEntity.setAmountPaid(5.00);
@@ -395,7 +423,7 @@ public class VerificationController {
                 } catch (ProfilesNotFoundException e) {
                     e.printStackTrace();
                 } catch (VerificationRequestNotFoundException e) {
-                   model.addAttribute("errorMessage","No Previous Requests Made this Month");
+                    model.addAttribute("errorMessage", "No Previous Requests Made this Month");
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -411,26 +439,67 @@ public class VerificationController {
 
 
     @RequestMapping(value = {"/upload"})
-    public String upload(HttpServletRequest request, Model model, HttpSession session,@RequestParam(value = "file", required = false) MultipartFile file) {
+    public String upload(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
         String url = request.getRequestURI();
         model.addAttribute("profile", session.getAttribute("profile"));
         int index = url.lastIndexOf("/");
         if (index != -1) {
-            if (null!=file) {
+            if (null != file) {
                 try {
-                    byte[] bytes = file.getBytes();
-                    String completeData = new String(bytes);
-                    String[] rows = completeData.split("#");
-                    String[] columns = rows[0].split(",");
-                    String add = "er";
+                    InputStream stream = file.getInputStream();
+                    XSSFWorkbook myExcelBook = new XSSFWorkbook(stream);
+                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Report");
+                    XSSFRow column = myExcelSheet.getRow(0);
+                    int columns;
+                    try {
+                        for (columns = 0; columns <= 100; columns++) {
+                            if (column.getCell(columns).getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                                String name = column.getCell(columns).getStringCellValue();
+                                if(name.equals("candidate_number")||name.equals("date_awarded")||name.equals("certificate_number")
+                                        ||name.equals("first_name")||name.equals("surname")||name.equals("date_of_birth")
+                                        ||name.equals("id_number")||name.equals("status")||name.equals("program")){
+                                    System.out.println("Column Name : " + name);
+                                }else{
+                                    model.addAttribute("errorMessage","column name: "+name+" not valid accepted names are: " +
+                                            "candidate_number\tdate_awarded\tcertificate_number\tfirst_name\tsurname\tdate_of_birth\tid_number\tstatus\tprogram\n");
+                                    return "profile";
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    } catch (NullPointerException npx) {
+                        int roww;
+                        for (roww = 1; roww <= 20000; roww++) {
+                            XSSFRow row = myExcelSheet.getRow(roww);
+
+                            int rows;
+                            for (columns = 0; columns <= 100; columns++) {
+
+                                try {
+                                    String name = row.getCell(columns).getStringCellValue();
+                                    System.out.println("row : " + name);
+                                } catch (IllegalStateException ill) {
+                                    Double name = row.getCell(columns).getNumericCellValue();
+                                    System.out.println("row : " + name);
+                                } catch (NullPointerException gl) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+
             }
-                return "upload";
+            return "upload";
+
+        }
+        return "upload";
+    }
+
 
 }
-        return "upload";
-    }}

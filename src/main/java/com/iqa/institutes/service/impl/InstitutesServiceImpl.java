@@ -31,8 +31,8 @@ public class InstitutesServiceImpl implements InstitutesService {
     }
 
     @Override
-    public InstitutesEntity findInstitutesByUsername(String username) throws InstitutesNotFoundException {
-        return this.InstitutesDao.findInstitutesByUsername(username);
+    public List<InstitutesEntity> findInstitutesByUserType(int username) throws InstitutesNotFoundException {
+        return this.InstitutesDao.findInstitutesByUserType(username);
     }
 
     @Override

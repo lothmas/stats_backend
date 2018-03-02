@@ -17,7 +17,7 @@ public interface InstitutesService {
 
     void saveInstitutes(InstitutesEntity var1);
 
-    InstitutesEntity findInstitutesByUsername(String var1) throws InstitutesNotFoundException;
+    List<InstitutesEntity> findInstitutesByUserType(int var1) throws InstitutesNotFoundException;
 
     InstitutesEntity findInstitutesById(int id) throws InstitutesNotFoundException;
 

@@ -17,7 +17,7 @@ public interface InstitutesDao extends AbstractDao<InstitutesEntity, Integer> {
 
     void saveInstitutes(InstitutesEntity var1);
 
-    InstitutesEntity findInstitutesByUsername(String var1) throws InstitutesNotFoundException;
+    List<InstitutesEntity> findInstitutesByUserType(int var1) throws InstitutesNotFoundException;
     InstitutesEntity findInstitutesById(int id) throws InstitutesNotFoundException;
     List<InstitutesEntity> getAllInstitutes() throws InstitutesNotFoundException;
     public List<InstitutesEntity> getInstitutesByCountry(int countryId) throws InstitutesNotFoundException;;

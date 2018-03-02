@@ -222,11 +222,25 @@
 				<form class="navbar-form full-width" action="#" data-th-action="@{./getInstitutions}"
 					  method="post"	enctype="multipart/form-data">
 			    <!-- begin col-12 -->
-			    <div class="col-md-12">
 
+
+					<div class="col-md-12">
+						<div>
+							<label th:if="${null==option || option==1}" class="btn btn-info active"  checked="checked"><input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
+							<label th:if="${null!=option &amp;&amp; option==2}" class="btn btn-info" ><input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
+
+							<label th:if="${null==option || option==1}" class="btn btn-info"><input  type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
+							<label th:if="${null!=option &amp;&amp; option==2}" class="btn btn-info active"><input  type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
+
+
+							<noscript><input type="submit" value="Submit"/></noscript>
+							<p></p>
+							<p></p>
+							<p></p>
+						</div>
 
 						<div class="dropdown pull-left" >
-							<a >
+							<a th:if="${null==option || option==1}">
 								<!--<form  action="#" data-th-action="@{./getInstitutions}"-->
 									  <!--method="post"	enctype="multipart/form-data">-->
 										<select class="form-control input-white" name="countryId" onchange='this.form.submit()'>
@@ -251,6 +265,7 @@
 									<noscript><input type="submit" value="Submit"/></noscript>
 
 															</a>
+
 
 						</div>
 						<div class="pull-left" >
@@ -362,12 +377,13 @@
 
 							</li>
 							<li>
-								<div th:if="${errorMessage!=null}" class="alert alert-danger row align-items-center justify-content-center">
-									<strong class="text-center" th:text="${'Warning!!  '+errorMessage +'  ['+ selectedCountryName+']'}"></strong>
-								</div>
+
+
 							</li>
 						</ul>
-
+						<div th:if="${errorMessage!=null}"  class="alert alert-info alert-dismissible fade in">
+							<strong class="text-center" th:text="${'Warning!!  '+errorMessage +'  ['+ selectedCountryName+']'}"></strong>
+						</div>
 
 			    </div>
 			    <!-- end col-12 -->

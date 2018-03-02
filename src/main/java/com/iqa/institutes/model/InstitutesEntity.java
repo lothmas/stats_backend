@@ -20,6 +20,7 @@ public class InstitutesEntity {
     private String contactPerson;
     private String occupation;
     private String extras;
+    private int type;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -49,6 +50,16 @@ public class InstitutesEntity {
 
     public void setCountry(int country) {
         this.country = country;
+    }
+
+    @Basic
+    @Column(name = "type", nullable = false)
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Basic

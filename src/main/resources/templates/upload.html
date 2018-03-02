@@ -193,12 +193,12 @@
 
 			<div class="panel panel-inverse">
 			    <div class="panel-heading">
-			        <div class="panel-heading-btn">
-			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-			            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-			        </div>
+			        <!--<div class="panel-heading-btn">-->
+			            <!--<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>-->
+			            <!--<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>-->
+			            <!--<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>-->
+			            <!--<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>-->
+			        <!--</div>-->
 			        <h4 class="panel-title">File Upload</h4>
 			    </div>
 			    <div class="panel-body">			
@@ -217,10 +217,10 @@
                             		<input type="file" name="file"  multiple="true" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel ,xlsx , xls,ods" required="true" />
 
                                 </span>
-								 <button type="submit" class="btn btn-primary" >
-									<i class="fa fa-upload"></i>
-                                    <span>Start upload</span>
-                                </button>
+								 <!--<button type="submit" class="btn btn-primary" >-->
+									<!--<i class="fa fa-upload"></i>-->
+                                    <!--<span>Start upload</span>-->
+                                <!--</button>-->
                                 <button type="reset" class="btn btn-warning cancel">
                                     <i class="fa fa-ban"></i>
                                     <span>Cancel upload</span>
@@ -366,18 +366,18 @@
                     <div class="progress progress-striped active"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
                 </td>
                 <td>
-                    <!--{% if (!i && !o.options.autoUpload) { %}-->
-                        <!--<button class="btn btn-primary btn-sm start" disabled>-->
-                            <!--<i class="fa fa-upload"></i>-->
-                            <!--<span>Start</span>-->
-                        <!--</button>-->
-                    <!--{% } %}-->
-                    <!--{% if (!i) { %}-->
+                    {% if (!o.options.autoUpload) { %}
+                        <button class="btn btn-primary btn-sm start" disabled="true">
+                            <i class="fa fa-upload"></i>
+                            <span>Start</span>
+                        </button>
+                    {% } %}
+                    {% if (!i) { %}
                         <button class="btn btn-white btn-sm cancel">
                             <i class="fa fa-ban"></i>
                             <span>Cancel</span>
                         </button>
-                    <!--{% } %}-->
+                    {% } %}
                 </td>
             </tr>
         {% } %}

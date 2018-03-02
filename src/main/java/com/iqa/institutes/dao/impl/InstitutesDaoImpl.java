@@ -32,18 +32,16 @@ public class InstitutesDaoImpl extends AbstractDaoImpl<InstitutesEntity, Integer
     }
 
     @Override
-    public InstitutesEntity findInstitutesByUsername(String username) throws InstitutesNotFoundException {
+    public List<InstitutesEntity> findInstitutesByUserType(int userType) throws InstitutesNotFoundException {
         List<InstitutesEntity> results = this.getCurrentSession().createCriteria(InstitutesEntity.class)
-                .add(Restrictions.eq("username", username))
+                .add(Restrictions.eq("type", userType))
+                .add(Restrictions.eq("enabled", 1))
                 .list();
 
         if (results.isEmpty()) {
-            throw new InstitutesNotFoundException("No Institutes found associated with username:" + username);
-        } else if (results.size() != 1) {
-            throw new InstitutesNotFoundException("There are several InstitutesEntity found associated with :" + username);
-        } else {
-            return (InstitutesEntity) results.get(0);
+            throw new InstitutesNotFoundException("No Institutes found associated with type:" + userType);
         }
+       return results;
     }
 
     @Override
@@ -79,6 +77,7 @@ public class InstitutesDaoImpl extends AbstractDaoImpl<InstitutesEntity, Integer
         List<InstitutesEntity> results = this.getCurrentSession().createCriteria(InstitutesEntity.class)
                 .add(Restrictions.eq("country", countryId))
                 .add(Restrictions.eq("enabled", 1))
+                .add(Restrictions.eq("type", 1))
                 .list();
 
         if (results.isEmpty()) {
