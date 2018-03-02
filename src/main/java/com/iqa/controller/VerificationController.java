@@ -141,7 +141,7 @@ public class VerificationController {
     public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "checkOutValue", required = false) Double checkOutValue) {
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
-
+        model.addAttribute("option",1);
         if (index != -1) {
             if (url.contains("verification")) {
                 try {
@@ -170,7 +170,7 @@ public class VerificationController {
             , @RequestParam(value = "instituteId", required = false) String instituteId, @RequestParam(value = "candidateId", required = false) String candidateId
             , @RequestParam(value = "action", required = false) String action, @RequestParam(value = "option", required = false) String option) {
 
-        model.addAttribute("option",null);
+
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         model.addAttribute("errorMessage", null);
@@ -219,6 +219,7 @@ public class VerificationController {
                 model.addAttribute("institutes", null);
                 model.addAttribute("errorMessage", "Please reselect your desired country");
                 model.addAttribute("searchButton", true);
+                model.addAttribute("option",1);
             }
 
         }
@@ -274,7 +275,7 @@ public class VerificationController {
 
                 model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
                 model.addAttribute("verifiedCandidate", candidatesVerifiedEntity);
-                model.addAttribute("authenticationStatus", "2");
+                model.addAttribute("authenticationStatus", 1);
             } catch (VerificationRequestNotFoundException e1) {
 
                 ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
