@@ -161,6 +161,7 @@ public class CountriesDaoImpl extends AbstractDaoImpl<Countries, String> impleme
 
         List<Countries> myFeed = getCurrentSession().createCriteria(Countries.class)
                 .addOrder(Order.asc("continent"))
+                .add(Restrictions.ne("name","International"))
                 .addOrder(Order.asc("name")).setCacheable(true)
                 .list();
 

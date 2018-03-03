@@ -170,7 +170,7 @@ public class VerificationController {
             , @RequestParam(value = "instituteId", required = false) String instituteId, @RequestParam(value = "candidateId", required = false) String candidateId
             , @RequestParam(value = "action", required = false) String action, @RequestParam(value = "option", required = false) String option) {
 
-
+        model.addAttribute("option",Integer.valueOf(option));
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         model.addAttribute("errorMessage", null);
@@ -182,11 +182,11 @@ public class VerificationController {
             if (url.contains("getInstitutions") && candidateId == null && instituteId == null) {
 
                 if(option.equals("2")){
-                    model.addAttribute("option",2);
+                    model.addAttribute("searchButton", false);
                     try {
                         List<InstitutesEntity> institutesEntities = institutesService.findInstitutesByUserType(2);
                         model.addAttribute("institutes", institutesEntities);
-                        model.addAttribute("searchButton", false);
+                        session.setAttribute("institute",institutesEntities);
                     } catch (InstitutesNotFoundException e) {
                         model.addAttribute("institutes", null);
                         model.addAttribute("searchButton", true);
@@ -211,15 +211,29 @@ public class VerificationController {
                 }
 
                 return "verification";
-            } else if (url.contains("getInstitutions") && candidateId != null && instituteId != null) {
+            } else if (url.contains("getInstitutions") && candidateId != null && instituteId != null && !candidateId.isEmpty()) {
                 verificationRequest(instituteId, candidateId, model, session);
+              if(option.equals("2")){
+                  try {
+                      model.addAttribute("countryName", countriesService.findByCountryId(55555).getName());
+                      model.addAttribute("searchButton", false);
+                      model.addAttribute("institutes", session.getAttribute("institutes"));
+                  } catch (CountryNotFoundException e) {
+                      e.printStackTrace();
+                  }
+
+              }
                 model.addAttribute("selectedCountryName", session.getAttribute("selectedCountryName"));
                 return "verification";
             } else {
+                if(option.equals("2")){
+                    model.addAttribute("searchButton", false);
+                }
+                else{
+                    model.addAttribute("searchButton", true);
+                }
                 model.addAttribute("institutes", null);
-                model.addAttribute("errorMessage", "Please reselect your desired country");
-                model.addAttribute("searchButton", true);
-                model.addAttribute("option",1);
+                model.addAttribute("errorMessage", "Please reselect your desired country or institute");
             }
 
         }

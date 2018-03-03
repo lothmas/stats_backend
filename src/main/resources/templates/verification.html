@@ -226,12 +226,11 @@
 
 					<div class="col-md-12">
 						<div>
-							<label th:if="${option==1}" class="btn btn-info active" ><input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
-							<label th:if="${option==2}" class="btn btn-info" ><input  value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
+							<label th:if="${option==1}" class="btn btn-theme  active" ><input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
+							<label th:if="${option==2}" class="btn btn-theme" ><input  value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
 
-							<label th:if="${option==1}" class="btn btn-info"><input  type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
-							<label th:if="${option==2}" class="btn btn-info active"><input checked="checked" type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
-
+							<label th:if="${option==1}" class="btn btn-theme"><input  type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
+							<label th:if="${option==2}" class="btn btn-theme active"><input checked="checked" type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
 
 							<noscript><input type="submit" value="Submit"/></noscript>
 							<p></p>
@@ -281,7 +280,7 @@
 						</div>
 
 					<div class="input-group m-b-20 pull-right">
-						<input title="Always Select Country &amp; Institute First" th:disabled="${searchButton}"  style="font-weight: bold;text-transform:uppercase;" type="text" class="form-control input-white" placeholder="Enter Candidate Number..." name="candidateId" />
+						<input title="Always Select Country &amp; Institute First" th:disabled="${searchButton}"  style="font-weight: bold;text-transform:uppercase;" type="text" class="form-control input-white" placeholder="Enter Candidate Number..." name="candidateId" required="true"/>
 
 
 						<div class="input-group-btn" >
@@ -337,7 +336,7 @@
 								<div class="result-info">
 									<h4 class="title" th:text="${'Institute: '+selectedInstitute.name}"></h4>
 									<h6 th:if="${!verificationResults.program.isEmpty()}" th:text="${'Program: '+verificationResults.program}"></h6>
-									<h5 th:if="${!selectedCountry.countryName.isEmpty()}">Country:<p class="location"  th:text="${' '+selectedCountry.countryName}"></p></h5>
+									<h5 th:if="${ option==1 &amp;&amp; selectedCountry.countryName }">Country:<p class="location"  th:text="${' '+selectedCountry.countryName}"></p></h5>
 									<h5 th:if="${!verificationResults.candidateNumber.isEmpty()}">Candidate Number:<p class="location"   th:text="${' '+verificationResults.candidateNumber}"></p></h5>
 									<h5 th:if="${!verificationResults.certificateNumber.isEmpty()}">Certificate Number:<p class="location"   th:text="${' '+verificationResults.certificateNumber}"></p></h5>
 									<h5 th:if="${verificationResults.dateAwarded!=null}">Awarding Date:<p class="location"  th:text="${' '+verificationResults.dateAwarded}"></p></h5>
