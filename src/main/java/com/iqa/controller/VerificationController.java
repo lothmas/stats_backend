@@ -228,14 +228,16 @@ public class VerificationController {
             } else {
                 if(option.equals("2")){
                     model.addAttribute("searchButton", false);
+                    model.addAttribute("errorMessage", "Please provide both institute and candidate number");
+
                 }
                 else{
                     model.addAttribute("searchButton", true);
+                    model.addAttribute("errorMessage", "Please reselect your desired country or institute and provide candidate number");
+
                 }
                 model.addAttribute("institutes", null);
-                model.addAttribute("errorMessage", "Please reselect your desired country or institute");
             }
-
         }
         return "verification";
     }
