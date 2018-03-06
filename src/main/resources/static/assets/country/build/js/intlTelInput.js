@@ -738,7 +738,7 @@
             if (this.selectedCountryData.iso2) {
                 this.defaultCountry = this.selectedCountryData.iso2;
             }
-            this.selectedFlagInner.attr("class", "iti-flag" + countryCode);
+
 
 
             this.selectedFlagInner.attr("class", "diallingCode");
@@ -750,6 +750,7 @@
             // update the selected country's title attribute
             var title = countryCode ? this.selectedCountryData.name + ": +" + this.selectedCountryData.dialCode : "Unknown";
             this.selectedFlagInner.parent().attr("title", title);
+            this.selectedFlagInner.attr("class", "iti-flag" + countryCode);
             if (this.options.separateDialCode) {
                 var dialCode = this.selectedCountryData.dialCode ? "+" + this.selectedCountryData.dialCode : "", parent = this.telInput.parent();
                 if (prevCountry.dialCode) {
