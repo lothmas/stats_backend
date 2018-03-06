@@ -58,12 +58,12 @@
                 <span class="logo-icon"><i><img src="frontend/assets/img/everify-transparent2.png"/></i></span>
                 <small>Create your E - Verify Account</small>
             </h1>
-            <div class="alert alert-danger row align-items-center justify-content-right" th:if="${alertMessage!=null}">
-                <div th:text="${alertMessage}">
-                    <div><span class="glyphicon glyphicon-remove"></span>
+            <div class="alert alert-info row align-items-center justify-content-right" th:if="${alertMessage!=null}">
+
+                    <div><span class="badge badge-warning" th:text="${alertMessage}"></span>
                         <small></small>
                     </div>
-                </div>
+
             </div>
             <!-- end register-header -->
             <!-- begin register-content -->
@@ -75,7 +75,7 @@
                         <div class="col-md-6 m-b-15">
                             <select class="form-control" name="userType" onchange='this.form.submit()'>
                                 <div th:if="${userType==null}">
-                                    <option selected="true" th:disabled="true" value="">User Type</option>
+                                    <option selected="true" th:disabled="true" >User Type</option>
                                 </div>
                                 <div th:if="${userType=='1'}">
                                     <option selected="true" th:disabled="true" value="1">Individual</option>
@@ -186,8 +186,8 @@
                         <div class="col-md-12 m-b-15">
 
                             <div class="input-group my-group">
-                                <input id="phone" type="number" name="phoneNumber" placeholder="Phone Number"
-                                       pattern="[0-9]*"    minlength="6"  maxlength="14" required="true"/>
+                                <input id="phone" type="tel" name="phoneNumber" placeholder="Phone Number"
+                                 title="Don't Put leading Zeros OR CountryDialCode &amp; Only Numbers Allowed"      pattern="[0-9]*"    minlength="6"  maxlength="14" required="true"/>
                             </div>
 
                         </div>
@@ -197,9 +197,11 @@
                         </div>
                     </div>
                     <div class="row row-space-10">
-                        <div class="col-md-6 m-b-15 ">
-                            <span class="btn btn-file">Upload Profile Pic
-                            <input type="file" id="pic" name="pic" accept="image/*" required="true" class="inputfile"/>
+                        <div class="col-md-12 m-b-15 ">
+                            <span class="btn btn-file badge badge-info">
+                                Upload Profile Pic
+                             <input type="file" id="pic" name="pic" accept="image/*" required="true" class="inputfile"/>
+
                             </span>
                         </div>
                     </div>
@@ -210,13 +212,13 @@
                     <!--</div>-->
                     <div class="checkbox m-b-30">
                         <label>
-                            <input type="checkbox" name="emailNotification" required="true"/> Click to agree to receive
+                            <input class="form-control move-left" type="checkbox" name="emailNotification" required="true"/> Click to agree to receive
                             notifications via e-mail
                         </label>
                     </div>
                     <div class="checkbox m-b-30">
                         <label>
-                            <input type="checkbox" name="termsAndConditions" required="true"/> By clicking Sign Up, you
+                            <input  class="form-control move-left" type="checkbox" name="termsAndConditions" required="true"/> By clicking Sign Up, you
                             agree to our <a href="#">Terms</a>
                             and that you have read our <a href="#">Data Policy</a>, including our <a href="#">Cookie
                             Use</a>.

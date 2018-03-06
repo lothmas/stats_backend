@@ -49,7 +49,7 @@
         // the countries at the top of the list. defaults to united states and united kingdom
         preferredCountries: [ "zw", "za" ],
         // display the country dial code next to the selected flag so it's not part of the typed number
-        separateDialCode: false,
+        separateDialCode: true,
         // specify the path to the libphonenumber script to enable validation/formatting
         utilsScript: ""
     }, keys = {
@@ -207,8 +207,15 @@
                 "class": "selected-flag"
             });
             selectedFlag.appendTo(this.flagsContainer);
+
+
             this.selectedFlagInner = $("<div>", {
                 "class": "iti-flag"
+            }).appendTo(selectedFlag);
+            this.selectedFlagInner = $("<input>", {
+                "class": "diallingCode",
+                "name":"diallingCode",
+                "type":"hidden"
             }).appendTo(selectedFlag);
             if (this.options.separateDialCode) {
                 this.selectedDialCode = $("<div>", {
@@ -731,7 +738,15 @@
             if (this.selectedCountryData.iso2) {
                 this.defaultCountry = this.selectedCountryData.iso2;
             }
-            this.selectedFlagInner.attr("class", "iti-flag " + countryCode);
+            this.selectedFlagInner.attr("class", "iti-flag" + countryCode);
+
+
+            this.selectedFlagInner.attr("class", "diallingCode");
+            this.selectedFlagInner.attr("value",this.selectedCountryData.dialCode);
+
+
+
+
             // update the selected country's title attribute
             var title = countryCode ? this.selectedCountryData.name + ": +" + this.selectedCountryData.dialCode : "Unknown";
             this.selectedFlagInner.parent().attr("title", title);

@@ -102,7 +102,8 @@ public class RegistrationController {
             , @RequestParam(value = "companyRegistration", required = false) String companyRegistration
             , @RequestParam(value = "countryId", required = false) String countryId
             , @RequestParam(value = "actions", required = false) String actions
-            , @RequestParam(value = "pic", required = false) MultipartFile pic) {
+            , @RequestParam(value = "pic", required = false) MultipartFile pic
+            , @RequestParam(value = "diallingCode", required = false) String diallingCode) {
 
 
         model.addAttribute("userType", null);
@@ -110,7 +111,27 @@ public class RegistrationController {
 
         if(actions!=null){
             model.addAttribute("userType", session.getAttribute("userType"));
-            userType= String.valueOf(session.getAttribute("userType"));
+
+            if(null==session.getAttribute("userType") || session.getAttribute("userType").equals("1")){
+                if(null==firstName){
+                    userType=null;
+                }
+                else{
+                    userType= String.valueOf(session.getAttribute("userType"));
+                }
+            }
+            if(null==session.getAttribute("userType") || session.getAttribute("userType").equals("2")
+                    ||session.getAttribute("userType").equals("3")
+                    ||session.getAttribute("userType").equals("4")
+                   ){
+                if(null==name){
+                    userType=null;
+                }
+                else{
+                    userType= String.valueOf(session.getAttribute("userType"));
+                }
+            }
+
         }
 
 
@@ -129,12 +150,12 @@ public class RegistrationController {
                         return"register";
                     }
                     try{
-                        if(phoneNumber.length()>14 || phoneNumber.contains("+")){
+                        if(phoneNumber.length()>14 ){
                             model.addAttribute("alertMessage", "........Please Enter Numbers Only for Phone-Number");
                             model.addAttribute("countries", session.getAttribute("countries"));
                             return"register";
                         }
-                        Integer phonenumber= Integer.valueOf(phoneNumber.trim());
+
                     }
                     catch (Exception exp){
                         model.addAttribute("alertMessage", "........Please Enter Numbers Only Maximum 10 for Phone-Number");
@@ -186,7 +207,10 @@ public class RegistrationController {
                 profileEntity.setKyc(1);
                 profileEntity.setBalanceAmount(0.00);
                 profileEntity.setEmailAddress(emailAddress);
-                profileEntity.setPhoneNumber(phoneNumber);
+                if(diallingCode.isEmpty()){
+                    diallingCode="263";
+                }
+                profileEntity.setPhoneNumber("+"+diallingCode+phoneNumber.replaceFirst ("^0*", ""));
                 profileEntity.setUserType(userType);
                 try {
                     profileEntity.setPicture(StringUtils.newStringUtf8(Base64.encodeBase64(pic.getBytes(), false)));

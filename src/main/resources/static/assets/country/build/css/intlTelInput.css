@@ -12,6 +12,10 @@
  *     // import the scss file after the overrides
  *     @import "bower_component/intl-tel-input/src/css/intlTelInput";
  */
+.move-left {
+  width: auto;
+  box-shadow: none;
+}
 .intl-tel-input {
   position: relative;
   display: inline-block; }
