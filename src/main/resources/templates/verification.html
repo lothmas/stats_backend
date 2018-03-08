@@ -336,7 +336,7 @@
 								<div class="result-info">
 									<h4 class="title" th:text="${'Institute: '+selectedInstitute.name}"></h4>
 									<h6 th:if="${!verificationResults.program.isEmpty()}" th:text="${'Program: '+verificationResults.program}"></h6>
-									<h5 th:if="${ option==1 &amp;&amp; selectedCountry.countryName }">Country:<p class="location"  th:text="${' '+selectedCountry.countryName}"></p></h5>
+									<h5 th:if="${ option==1 &amp;&amp; !selectedCountry.countryName.isEmpty() }">Country:<p class="location"  th:text="${' '+selectedCountry.countryName}"></p></h5>
 									<h5 th:if="${!verificationResults.candidateNumber.isEmpty()}">Candidate Number:<p class="location"   th:text="${' '+verificationResults.candidateNumber}"></p></h5>
 									<h5 th:if="${!verificationResults.certificateNumber.isEmpty()}">Certificate Number:<p class="location"   th:text="${' '+verificationResults.certificateNumber}"></p></h5>
 									<h5 th:if="${verificationResults.dateAwarded!=null}">Awarding Date:<p class="location"  th:text="${' '+verificationResults.dateAwarded}"></p></h5>
