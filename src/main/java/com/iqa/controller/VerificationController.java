@@ -11,6 +11,7 @@ import com.iqa.profile.individual.model.LoginRequest;
 import com.iqa.profiles.exception.ProfilesNotFoundException;
 import com.iqa.profiles.model.ProfileEntity;
 import com.iqa.profiles.service.ProfilesService;
+import com.iqa.utilities.JsonObjectConversionUtility;
 import com.iqa.verificationrequest.exception.VerificationRequestNotFoundException;
 import com.iqa.verificationrequest.model.VerificationRequestEntity;
 import com.iqa.verificationrequest.service.VerificationRequestService;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -456,7 +458,7 @@ public class VerificationController {
 
 
     @RequestMapping(value = {"/upload"})
-    public String upload(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
+    public String upload(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
         String url = request.getRequestURI();
         model.addAttribute("profile", session.getAttribute("profile"));
         int index = url.lastIndexOf("/");
@@ -519,4 +521,75 @@ public class VerificationController {
     }
 
 
+    @RequestMapping(value = {"/uploading"})
+    @ResponseBody
+
+    public String uploading(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
+        String url = request.getRequestURI();
+     //   response.setStatus(200,"File Uploaded");
+        model.addAttribute("profile", session.getAttribute("profile"));
+        int index = url.lastIndexOf("/");
+        if (index != -1) {
+            if (null != file) {
+                try {
+                    InputStream stream = file.getInputStream();
+                    XSSFWorkbook myExcelBook = new XSSFWorkbook(stream);
+                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Report");
+                    XSSFRow column = myExcelSheet.getRow(0);
+                    int columns;
+                    try {
+                        for (columns = 0; columns <= 100; columns++) {
+                            if (column.getCell(columns).getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                                String name = column.getCell(columns).getStringCellValue();
+                                if(name.equals("candidate_number")||name.equals("date_awarded")||name.equals("certificate_number")
+                                        ||name.equals("first_name")||name.equals("surname")||name.equals("date_of_birth")
+                                        ||name.equals("id_number")||name.equals("status")||name.equals("program")){
+                                    System.out.println("Column Name : " + name);
+                                }else{
+                                    model.addAttribute("errorMessage","column name: "+name+" not valid accepted names are: " +
+                                            "candidate_number\tdate_awarded\tcertificate_number\tfirst_name\tsurname\tdate_of_birth\tid_number\tstatus\tprogram\n");
+                                    return "profile";
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    } catch (NullPointerException npx) {
+                        int roww;
+                        for (roww = 1; roww <= 20000; roww++) {
+                            XSSFRow row = myExcelSheet.getRow(roww);
+
+                            int rows;
+                            for (columns = 0; columns <= 100; columns++) {
+
+                                try {
+                                    String name = row.getCell(columns).getStringCellValue();
+                                    System.out.println("row : " + name);
+                                } catch (IllegalStateException ill) {
+                                    Double name = row.getCell(columns).getNumericCellValue();
+                                    System.out.println("row : " + name);
+                                } catch (NullPointerException gl) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            return "upload";
+
+        }
+        return "upload";
+    }
+
+//    UploadResponse uploadResponse=new UploadResponse();
+//            uploadResponse.setStatus(200);
+//            uploadResponse.setMessage(file.getName()+" Successfully Uploaded");
+//    JsonObjectConversionUtility jsonObjectConversionUtility=new JsonObjectConversionUtility();
+//           return jsonObjectConversionUtility.objectToJson(uploadResponse);
 }

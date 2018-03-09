@@ -73,6 +73,14 @@ var handleEditableFormAjaxCall = function() {
             handleAjaxConsoleLog(settings, this);
         }        
     });
+    $.mockjax({
+        url: '/status',
+        status: 200,
+        response: function(settings) {
+            this.responseText = 'File SucessFully Uploaded';
+            handleAjaxConsoleLog(settings, this);
+        }
+    });
 };
 
 var handleEditableFieldConstruct = function() {
