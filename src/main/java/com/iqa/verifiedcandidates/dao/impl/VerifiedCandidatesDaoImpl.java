@@ -80,7 +80,7 @@ public class VerifiedCandidatesDaoImpl extends AbstractDaoImpl<CandidatesVerifie
         List<CandidatesVerifiedEntity> results = this.getCurrentSession().createCriteria(CandidatesVerifiedEntity.class)
                 .add(Restrictions.eq("candidateNumber", candidateNumber))
                 .add(Restrictions.eq("institution", instituteId))
-                .add(Restrictions.eq("enabled", "1"))
+                .add(Restrictions.eq("enabled", 1))
                 .addOrder(Order.desc("id"))
                 .list();
 

@@ -208,7 +208,7 @@ public class IndividualProfileEntity {
     }
 
     @Basic
-    @Column(name = "picture", nullable = true, length = -1)
+    @Column(name = "picture", nullable = true, length = 17000000)
     public String getPicture() {
         return picture;
     }

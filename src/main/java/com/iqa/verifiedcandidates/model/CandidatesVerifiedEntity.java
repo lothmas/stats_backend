@@ -12,7 +12,7 @@ public class CandidatesVerifiedEntity {
     private int id;
     private String candidateNumber;
     private int institution;
-    private String enabled;
+    private int enabled;
     private Date dateAwarded;
     private String certificateNumber;
     private String firstName;
@@ -24,6 +24,7 @@ public class CandidatesVerifiedEntity {
     private Integer progressStatus;
     private Date updateDate;
     private int requesterId;
+    private int upload_user;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -56,7 +57,7 @@ public class CandidatesVerifiedEntity {
     }
 
     @Basic
-    @Column(name = "requester_id", nullable = false)
+    @Column(name = "requester_id", nullable = true)
     public int getRequesterId() {
         return requesterId;
     }
@@ -65,14 +66,23 @@ public class CandidatesVerifiedEntity {
         this.requesterId = requesterId;
     }
 
+    @Basic
+    @Column(name = "upload_user", nullable = false)
+    public int getUpload_user() {
+        return upload_user;
+    }
+
+    public void setUpload_user(int upload_user) {
+        this.upload_user = upload_user;
+    }
 
     @Basic
-    @Column(name = "enabled", nullable = false, length = 45)
-    public String getEnabled() {
+    @Column(name = "enabled", nullable = false, length = 1)
+    public int getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(int enabled) {
         this.enabled = enabled;
     }
 
@@ -187,7 +197,7 @@ public class CandidatesVerifiedEntity {
         if (institution != that.institution) return false;
         if (candidateNumber != null ? !candidateNumber.equals(that.candidateNumber) : that.candidateNumber != null)
             return false;
-        if (enabled != null ? !enabled.equals(that.enabled) : that.enabled != null) return false;
+
         if (dateAwarded != null ? !dateAwarded.equals(that.dateAwarded) : that.dateAwarded != null) return false;
         if (certificateNumber != null ? !certificateNumber.equals(that.certificateNumber) : that.certificateNumber != null)
             return false;
@@ -209,7 +219,6 @@ public class CandidatesVerifiedEntity {
         int result = id;
         result = 31 * result + (candidateNumber != null ? candidateNumber.hashCode() : 0);
         result = 31 * result + institution;
-        result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
         result = 31 * result + (dateAwarded != null ? dateAwarded.hashCode() : 0);
         result = 31 * result + (certificateNumber != null ? certificateNumber.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);

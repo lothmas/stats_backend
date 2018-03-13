@@ -185,9 +185,9 @@
                                                     <a href="#"  class="qty-control left disabled" data-click="decrease-qty" data-target="#qty" ></a>
                                                     <input type="text" name="qty"  class="form-control" id="qty" oninput="multiplyBy()"/>
                                                     <input th:if="${result.userType=='1'}" type="hidden" id="userTypeCharge" value="5" class="form-control" />
-                                                    <input th:if="${result.userType=='1'}" type="hidden" id="userTypeCharge" value="10" class="form-control"  />
-                                                    <input th:if="${result.userType=='1'}" type="hidden" id="userTypeCharge" value="15" class="form-control" />
-                                                    <input th:if="${result.userType=='1'}" type="hidden" id="userTypeCharge" value="20" class="form-control"  />
+                                                    <input th:if="${result.userType=='2'}" type="hidden" id="userTypeCharge" value="10" class="form-control"  />
+                                                    <input th:if="${result.userType=='3'}" type="hidden" id="userTypeCharge" value="15" class="form-control" />
+                                                    <input th:if="${result.userType=='4'}" type="hidden" id="userTypeCharge" value="20" class="form-control"  />
                                                     <a href="#" class="qty-control right disabled" data-click="increase-qty" data-target="#qty"></a>
                                                 </div>
                                                 <div class="qty-desc">1 to max order</div>

@@ -26,8 +26,11 @@ public class VerifiedCandidatesServiceImpl implements VerifiedCandidatesService 
 
 
     @Override
+    @Transactional(
+            readOnly = false
+    )
     public void saveVerifiedCandidates(CandidatesVerifiedEntity var1) {
-
+       this.VerifiedCandidatesDao.saveVerifiedCandidates(var1);
     }
 
     @Override

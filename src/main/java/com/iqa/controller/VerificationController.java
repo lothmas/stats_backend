@@ -11,6 +11,8 @@ import com.iqa.profile.individual.model.LoginRequest;
 import com.iqa.profiles.exception.ProfilesNotFoundException;
 import com.iqa.profiles.model.ProfileEntity;
 import com.iqa.profiles.service.ProfilesService;
+import com.iqa.utilities.Enums;
+import com.iqa.utilities.GeneralDomainFunctions;
 import com.iqa.utilities.JsonObjectConversionUtility;
 import com.iqa.verificationrequest.exception.VerificationRequestNotFoundException;
 import com.iqa.verificationrequest.model.VerificationRequestEntity;
@@ -40,6 +42,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -143,7 +146,7 @@ public class VerificationController {
     public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "checkOutValue", required = false) Double checkOutValue) {
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
-        model.addAttribute("option",1);
+        model.addAttribute("option", 1);
         if (index != -1) {
             if (url.contains("verification")) {
                 try {
@@ -172,7 +175,7 @@ public class VerificationController {
             , @RequestParam(value = "instituteId", required = false) String instituteId, @RequestParam(value = "candidateId", required = false) String candidateId
             , @RequestParam(value = "action", required = false) String action, @RequestParam(value = "option", required = false) String option) {
 
-        model.addAttribute("option",Integer.valueOf(option));
+        model.addAttribute("option", Integer.valueOf(option));
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         model.addAttribute("errorMessage", null);
@@ -183,57 +186,56 @@ public class VerificationController {
             model.addAttribute("searchButton", false);
             if (url.contains("getInstitutions") && candidateId == null && instituteId == null) {
 
-                if(option.equals("2")){
+                if (option.equals("2")) {
                     model.addAttribute("searchButton", false);
                     try {
                         List<InstitutesEntity> institutesEntities = institutesService.findInstitutesByUserType(2);
                         model.addAttribute("institutes", institutesEntities);
-                        session.setAttribute("institute",institutesEntities);
+                        session.setAttribute("institute", institutesEntities);
                     } catch (InstitutesNotFoundException e) {
                         model.addAttribute("institutes", null);
                         model.addAttribute("searchButton", true);
                         model.addAttribute("errorMessage", "No International Professional Institution Found");
                     }
 
-                }else if(null!=countryId){
+                } else if (null != countryId) {
 
-                String[] spiltRequest = countryId.split(",");
-                try {
-                    List<InstitutesEntity> institutesEntities = institutesService.getInstitutesByCountry(Integer.parseInt(spiltRequest[0]));
-                    model.addAttribute("institutes", institutesEntities);
-                } catch (Exception e) {
-                    model.addAttribute("institutes", null);
-                    model.addAttribute("searchButton", true);
-                    model.addAttribute("errorMessage", "No Institute Available for Selected Country");
-                }
+                    String[] spiltRequest = countryId.split(",");
+                    try {
+                        List<InstitutesEntity> institutesEntities = institutesService.getInstitutesByCountry(Integer.parseInt(spiltRequest[0]));
+                        model.addAttribute("institutes", institutesEntities);
+                    } catch (Exception e) {
+                        model.addAttribute("institutes", null);
+                        model.addAttribute("searchButton", true);
+                        model.addAttribute("errorMessage", "No Institute Available for Selected Country");
+                    }
 
 
-                model.addAttribute("selectedCountryName", spiltRequest[1]);
-                session.setAttribute("selectedCountryName", spiltRequest[1]);
+                    model.addAttribute("selectedCountryName", spiltRequest[1]);
+                    session.setAttribute("selectedCountryName", spiltRequest[1]);
                 }
 
                 return "verification";
             } else if (url.contains("getInstitutions") && candidateId != null && instituteId != null && !candidateId.isEmpty()) {
                 verificationRequest(instituteId, candidateId, model, session);
-              if(option.equals("2")){
-                  try {
-                      model.addAttribute("countryName", countriesService.findByCountryId(55555).getName());
-                      model.addAttribute("searchButton", false);
-                      model.addAttribute("institutes", session.getAttribute("institutes"));
-                  } catch (CountryNotFoundException e) {
-                      e.printStackTrace();
-                  }
+                if (option.equals("2")) {
+                    try {
+                        model.addAttribute("countryName", countriesService.findByCountryId(55555).getName());
+                        model.addAttribute("searchButton", false);
+                        model.addAttribute("institutes", session.getAttribute("institutes"));
+                    } catch (CountryNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
-              }
+                }
                 model.addAttribute("selectedCountryName", session.getAttribute("selectedCountryName"));
                 return "verification";
             } else {
-                if(option.equals("2")){
+                if (option.equals("2")) {
                     model.addAttribute("searchButton", false);
                     model.addAttribute("errorMessage", "Please provide both institute and candidate number");
 
-                }
-                else{
+                } else {
                     model.addAttribute("searchButton", true);
                     model.addAttribute("errorMessage", "Please reselect your desired country or institute and provide candidate number");
 
@@ -467,19 +469,19 @@ public class VerificationController {
                 try {
                     InputStream stream = file.getInputStream();
                     XSSFWorkbook myExcelBook = new XSSFWorkbook(stream);
-                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Report");
+                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Qualification");
                     XSSFRow column = myExcelSheet.getRow(0);
                     int columns;
                     try {
                         for (columns = 0; columns <= 100; columns++) {
                             if (column.getCell(columns).getCellType() == HSSFCell.CELL_TYPE_STRING) {
                                 String name = column.getCell(columns).getStringCellValue();
-                                if(name.equals("candidate_number")||name.equals("date_awarded")||name.equals("certificate_number")
-                                        ||name.equals("first_name")||name.equals("surname")||name.equals("date_of_birth")
-                                        ||name.equals("id_number")||name.equals("status")||name.equals("program")){
+                                if (name.equals("candidate_number") || name.equals("date_awarded") || name.equals("certificate_number")
+                                        || name.equals("first_name") || name.equals("surname") || name.equals("date_of_birth")
+                                        || name.equals("id_number") || name.equals("status") || name.equals("program")) {
                                     System.out.println("Column Name : " + name);
-                                }else{
-                                    model.addAttribute("errorMessage","column name: "+name+" not valid accepted names are: " +
+                                } else {
+                                    model.addAttribute("errorMessage", "column name: " + name + " not valid accepted names are: " +
                                             "candidate_number\tdate_awarded\tcertificate_number\tfirst_name\tsurname\tdate_of_birth\tid_number\tstatus\tprogram\n");
                                     return "profile";
                                 }
@@ -526,50 +528,136 @@ public class VerificationController {
 
     public String uploading(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
         String url = request.getRequestURI();
-     //   response.setStatus(200,"File Uploaded");
+        //   response.setStatus(200,"File Uploaded");
         model.addAttribute("profile", session.getAttribute("profile"));
+        ProfileEntity profile = (ProfileEntity) session.getAttribute("profile");
+        UploadResponse uploadResponse = new UploadResponse();
+
+        GeneralDomainFunctions generalDomainFunctions = new GeneralDomainFunctions();
         int index = url.lastIndexOf("/");
         if (index != -1) {
             if (null != file) {
                 try {
                     InputStream stream = file.getInputStream();
                     XSSFWorkbook myExcelBook = new XSSFWorkbook(stream);
-                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Report");
+                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Qualifications");
                     XSSFRow column = myExcelSheet.getRow(0);
                     int columns;
+                    ArrayList columnNames = new ArrayList();
                     try {
                         for (columns = 0; columns <= 100; columns++) {
                             if (column.getCell(columns).getCellType() == HSSFCell.CELL_TYPE_STRING) {
                                 String name = column.getCell(columns).getStringCellValue();
-                                if(name.equals("candidate_number")||name.equals("date_awarded")||name.equals("certificate_number")
-                                        ||name.equals("first_name")||name.equals("surname")||name.equals("date_of_birth")
-                                        ||name.equals("id_number")||name.equals("status")||name.equals("program")){
-                                    System.out.println("Column Name : " + name);
-                                }else{
-                                    model.addAttribute("errorMessage","column name: "+name+" not valid accepted names are: " +
+                                if (name.equals("candidate_number") || name.equals("date_awarded") || name.equals("certificate_number")
+                                        || name.equals("first_name") || name.equals("surname") || name.equals("date_of_birth")
+                                        || name.equals("id_number") || name.equals("status") || name.equals("program") || name.equals("institute")) {
+
+                                    columnNames.add(name);
+                                } else {
+                                    model.addAttribute("errorMessage", "column name: " + name + " not valid accepted names are: " +
                                             "candidate_number\tdate_awarded\tcertificate_number\tfirst_name\tsurname\tdate_of_birth\tid_number\tstatus\tprogram\n");
                                     return "profile";
                                 }
+
                             } else {
                                 break;
                             }
                         }
+
                     } catch (NullPointerException npx) {
+                        long time = System.currentTimeMillis();
+                        java.sql.Date creationDate = new java.sql.Date(time);
+                        for (int i = 0; i < columnNames.size(); i++) {
+                            System.out.println(columnNames.get(i));
+                        }
                         int roww;
                         for (roww = 1; roww <= 20000; roww++) {
                             XSSFRow row = myExcelSheet.getRow(roww);
 
                             int rows;
-                            for (columns = 0; columns <= 100; columns++) {
+                            CandidatesVerifiedEntity verified = new CandidatesVerifiedEntity();
+                            for (columns = 0; columns <= columnNames.size(); columns++) {
 
                                 try {
                                     String name = row.getCell(columns).getStringCellValue();
                                     System.out.println("row : " + name);
+
+                                    verified.setEnabled(1);
+                                    verified.setOutcome(1);
+                                    verified.setUpload_user(profile.getId());
+                                    verified.setUpdateDate(creationDate);
+                                    if (columnNames.get(columns).equals("candidate_number")) {
+                                        verified.setCandidateNumber(name);
+                                    }
+                                    if (columnNames.get(columns).equals("date_awarded")) {
+                                        java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
+                                        verified.setDateAwarded(date);
+                                    }
+                                    if (columnNames.get(columns).equals("certificate_number")) {
+                                        verified.setCertificateNumber(name);
+                                    }
+                                    if (columnNames.get(columns).equals("first_name")) {
+                                        verified.setFirstName(name);
+                                    }
+                                    if (columnNames.get(columns).equals("surname")) {
+                                        verified.setSurname(name);
+                                    }
+                                    if (columnNames.get(columns).equals("date_of_birth")) {
+                                        java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
+                                        verified.setDob(date);
+                                    }
+                                    if (columnNames.get(columns).equals("id_number")) {
+                                        verified.setIdNumber(name);
+                                    }
+                                    if (columnNames.get(columns).equals("status")) {
+                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.COMPLETED.getStatusMessage().toUpperCase())) {
+                                            verified.setProgressStatus(Enums.CandidateVerificationProgress.COMPLETED.getStatusCode());
+                                        }
+                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.DROPOUT.getStatusMessage().toUpperCase())) {
+                                            verified.setProgressStatus(Enums.CandidateVerificationProgress.DROPOUT.getStatusCode());
+                                        }
+                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.INPROGRESS.getStatusMessage().toUpperCase())) {
+                                            verified.setProgressStatus(Enums.CandidateVerificationProgress.INPROGRESS.getStatusCode());
+                                        }
+                                    }
+                                    if (columnNames.get(columns).equals("program")) {
+                                        verified.setProgram(name);
+                                    }
+
+
                                 } catch (IllegalStateException ill) {
-                                    Double name = row.getCell(columns).getNumericCellValue();
-                                    System.out.println("row : " + name);
+                                    if (columnNames.get(columns).equals("institute")) {
+                                        Double institute = row.getCell(columns).getNumericCellValue();
+                                        int iend = institute.toString().indexOf(".");
+                                        String subString = institute.toString().substring(0, iend);
+                                        verified.setInstitution(Integer.valueOf(String.valueOf(subString)));
+                                        String df = "sd";
+                                    }
                                 } catch (NullPointerException gl) {
                                     break;
+                                }
+                            }
+                            if (columns == columnNames.size()) {
+                                CandidatesVerifiedEntity verifiedCandidates = new CandidatesVerifiedEntity();
+
+                                try {
+                                    verifiedCandidates = verifiedCandidatesService.getVerifiedCandidatesByCandidateIdAndInstituteId(verified.getInstitution(), verified.getCandidateNumber()).get(0);
+                                    if (verifiedCandidates.getProgressStatus() != Enums.CandidateVerificationProgress.COMPLETED.getStatusCode()) {
+                                        verifiedCandidates.setUpdateDate(verified.getUpdateDate());
+                                        verifiedCandidates.setOutcome(verified.getOutcome());
+                                        verifiedCandidates.setProgressStatus(verified.getProgressStatus());
+                                        verifiedCandidates.setProgram(verified.getProgram());
+                                        verifiedCandidates.setUpload_user(verified.getUpload_user());
+                                        verifiedCandidatesService.saveVerifiedCandidates(verifiedCandidates);
+
+                                    } else {
+                                        uploadResponse.setStatus(200);
+                                        uploadResponse.setMessage("row: " + columns + " with candidate " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Already Exists with a complete status can't be changed ");
+                                    }
+
+                                } catch (VerifiedCandidatesNotFoundException e) {
+                                    uploadResponse.setStatus(500);
+                                    verifiedCandidatesService.saveVerifiedCandidates(verified);
                                 }
                             }
                         }
@@ -581,10 +669,12 @@ public class VerificationController {
 
 
             }
-            return "upload";
+            JsonObjectConversionUtility jsonObjectConversionUtility = new JsonObjectConversionUtility();
+            return jsonObjectConversionUtility.objectToJson(uploadResponse);
 
         }
-        return "upload";
+        JsonObjectConversionUtility jsonObjectConversionUtility = new JsonObjectConversionUtility();
+        return jsonObjectConversionUtility.objectToJson(uploadResponse);
     }
 
 //    UploadResponse uploadResponse=new UploadResponse();

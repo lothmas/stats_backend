@@ -22,6 +22,8 @@ import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -716,6 +718,20 @@ public class GeneralDomainFunctions {
         public int getValue() {
             return value;
         }
+    }
+
+    public Date stringToDate(String stringDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+        try {
+
+            Date date = formatter.parse(stringDate);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }
