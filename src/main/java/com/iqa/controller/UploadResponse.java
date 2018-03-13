@@ -17,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "error",
     "exception",
     "message",
-    "path"
+    "path",
+        "url"
 })
 public class UploadResponse {
 
@@ -31,6 +32,8 @@ public class UploadResponse {
     private String exception;
     @JsonProperty("message")
     private String message;
+    @JsonProperty("url")
+    private String url;
     @JsonProperty("path")
     private String path;
     @JsonIgnore
@@ -94,6 +97,15 @@ public class UploadResponse {
     @JsonProperty("path")
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @JsonProperty("url")
+    public String getUrl() {
+        return url;
+    }
+    @JsonProperty("url")
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @JsonAnyGetter

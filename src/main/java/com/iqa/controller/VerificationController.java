@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -531,17 +532,32 @@ public class VerificationController {
         //   response.setStatus(200,"File Uploaded");
         model.addAttribute("profile", session.getAttribute("profile"));
         ProfileEntity profile = (ProfileEntity) session.getAttribute("profile");
-        UploadResponse uploadResponse = new UploadResponse();
-
+        StringBuffer message=new StringBuffer();
+        JsonResponse jsonResponse=new JsonResponse();
+        JsonObjectConversionUtility jsonObjectConversionUtility = new JsonObjectConversionUtility();
+        File file1 =new File();
+        List<File> files =new ArrayList<>();
         GeneralDomainFunctions generalDomainFunctions = new GeneralDomainFunctions();
         int index = url.lastIndexOf("/");
         if (index != -1) {
             if (null != file) {
                 try {
+
                     InputStream stream = file.getInputStream();
                     XSSFWorkbook myExcelBook = new XSSFWorkbook(stream);
-                    XSSFSheet myExcelSheet = myExcelBook.getSheet("Qualifications");
-                    XSSFRow column = myExcelSheet.getRow(0);
+                    XSSFRow column = null;
+                    XSSFSheet myExcelSheet;
+                    try {
+                         myExcelSheet = myExcelBook.getSheet("Qualifications");
+                        column = myExcelSheet.getRow(0);
+                    }
+                    catch (NullPointerException npe){
+                        file1.setError("Make Sure Your Sheet is named Qualifications");
+                        files.add(file1);
+                        jsonResponse.setFiles(files);
+                        return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                    }
+                    int countRows=1;
                     int columns;
                     ArrayList columnNames = new ArrayList();
                     try {
@@ -554,9 +570,13 @@ public class VerificationController {
 
                                     columnNames.add(name);
                                 } else {
-                                    model.addAttribute("errorMessage", "column name: " + name + " not valid accepted names are: " +
-                                            "candidate_number\tdate_awarded\tcertificate_number\tfirst_name\tsurname\tdate_of_birth\tid_number\tstatus\tprogram\n");
-                                    return "profile";
+
+
+                                    file1.setError("column name: " + name + " not valid accepted names are: " +
+                                            "candidate_number,\ndate_awarded,\ncertificate_number, \nfirst_name, \nsurname, \ndate_of_birth, \nid_number, \nstatus, \nprogram\n");
+                                    files.add(file1);
+                                    jsonResponse.setFiles(files);
+                                    return jsonObjectConversionUtility.objectToJson(jsonResponse);
                                 }
 
                             } else {
@@ -565,6 +585,12 @@ public class VerificationController {
                         }
 
                     } catch (NullPointerException npx) {
+                        if(columnNames.size()<10){
+                            file1.setError("Please Make Sure Your All Your Columns are Properly Named with no Blank Columns.");
+                            files.add(file1);
+                            jsonResponse.setFiles(files);
+                            return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                        }
                         long time = System.currentTimeMillis();
                         java.sql.Date creationDate = new java.sql.Date(time);
                         for (int i = 0; i < columnNames.size(); i++) {
@@ -577,64 +603,165 @@ public class VerificationController {
                             int rows;
                             CandidatesVerifiedEntity verified = new CandidatesVerifiedEntity();
                             for (columns = 0; columns <= columnNames.size(); columns++) {
+                                String name = null;
 
+                                System.out.println("row : " + name);
                                 try {
-                                    String name = row.getCell(columns).getStringCellValue();
-                                    System.out.println("row : " + name);
+                                    name = row.getCell(columns).getStringCellValue();
 
                                     verified.setEnabled(1);
                                     verified.setOutcome(1);
                                     verified.setUpload_user(profile.getId());
                                     verified.setUpdateDate(creationDate);
+
                                     if (columnNames.get(columns).equals("candidate_number")) {
-                                        verified.setCandidateNumber(name);
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setCandidateNumber(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+                                        }
                                     }
                                     if (columnNames.get(columns).equals("date_awarded")) {
-                                        java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
-                                        verified.setDateAwarded(date);
+                                      try {
+                                          if (null != name && !name.isEmpty()) {
+                                              java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
+                                              verified.setDateAwarded(date);
+                                          } else {
+                                              return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                          }
+                                      }  catch (Exception ex){
+                                            file1.setError(columnNames.get(columns)+" only accepts valid date formats dd-MM--yyyy for Row: "+roww);
+                                            files.add(file1);
+                                            jsonResponse.setFiles(files);
+                                            return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("certificate_number")) {
-                                        verified.setCertificateNumber(name);
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setCertificateNumber(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("first_name")) {
-                                        verified.setFirstName(name);
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setFirstName(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("surname")) {
-                                        verified.setSurname(name);
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setSurname(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("date_of_birth")) {
-                                        java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
-                                        verified.setDob(date);
+                                        try {
+                                            if (null != name && !name.isEmpty()) {
+                                                java.sql.Date date = new java.sql.Date(generalDomainFunctions.stringToDate(name).getTime());
+                                                verified.setDob(date);
+                                            } else {
+                                                return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                            }
+                                        }
+                                        catch (Exception ex){
+                                            file1.setError(columnNames.get(columns)+" only accepts valid date formats dd-MM.yyyy for Row: "+roww);
+                                            files.add(file1);
+                                            jsonResponse.setFiles(files);
+                                            return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("id_number")) {
-                                        verified.setIdNumber(name);
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setIdNumber(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
+
                                     }
                                     if (columnNames.get(columns).equals("status")) {
-                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.COMPLETED.getStatusMessage().toUpperCase())) {
+                                        if(null!=name && !name.isEmpty()) {
                                             verified.setProgressStatus(Enums.CandidateVerificationProgress.COMPLETED.getStatusCode());
                                         }
-                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.DROPOUT.getStatusMessage().toUpperCase())) {
+                                        else if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.DROPOUT.getStatusMessage().toUpperCase())) {
                                             verified.setProgressStatus(Enums.CandidateVerificationProgress.DROPOUT.getStatusCode());
                                         }
-                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.INPROGRESS.getStatusMessage().toUpperCase())) {
+                                       else if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.INPROGRESS.getStatusMessage().toUpperCase())) {
                                             verified.setProgressStatus(Enums.CandidateVerificationProgress.INPROGRESS.getStatusCode());
                                         }
+                                        else{
+                                            file1.setError(columnNames.get(columns)+" only accepts valid status (1) Completed (2) Drop Out (3) In Progresss check Row"+roww);
+                                            files.add(file1);
+                                            jsonResponse.setFiles(files);
+                                            return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                                        }
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
+                                        if (name.toUpperCase().contains(Enums.CandidateVerificationProgress.COMPLETED.getStatusMessage().toUpperCase())) {
+
                                     }
                                     if (columnNames.get(columns).equals("program")) {
+                                        if(null!=name && !name.isEmpty()) {
+                                            verified.setCandidateNumber(name);
+                                        }
+                                        else{
+                                            return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                        }
                                         verified.setProgram(name);
                                     }
 
 
                                 } catch (IllegalStateException ill) {
                                     if (columnNames.get(columns).equals("institute")) {
-                                        Double institute = row.getCell(columns).getNumericCellValue();
-                                        int iend = institute.toString().indexOf(".");
-                                        String subString = institute.toString().substring(0, iend);
-                                        verified.setInstitution(Integer.valueOf(String.valueOf(subString)));
-                                        String df = "sd";
+                                       try {
+                                           if (null != name && !name.isEmpty()) {
+                                               Double institute = row.getCell(columns).getNumericCellValue();
+                                               int iend = institute.toString().indexOf(".");
+                                               String subString = institute.toString().substring(0, iend);
+                                               verified.setInstitution(Integer.valueOf(String.valueOf(subString)));
+                                           } else {
+                                               return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, columnNames, roww);
+
+                                           }
+                                       }
+                                       catch (NumberFormatException exp){
+                                           file1.setError("Row: "+roww+" on institute column only accepts numeric values");
+                                           files.add(file1);
+                                           jsonResponse.setFiles(files);
+                                           return jsonObjectConversionUtility.objectToJson(jsonResponse);
+                                       }
+
                                     }
                                 } catch (NullPointerException gl) {
                                     break;
+                                }
+                                catch (Exception in){
+                                    file1.setError("Please Make sure all values are supplied");
+                                    files.add(file1);
+                                    jsonResponse.setFiles(files);
+                                    return jsonObjectConversionUtility.objectToJson(jsonResponse);
                                 }
                             }
                             if (columns == columnNames.size()) {
@@ -649,37 +776,47 @@ public class VerificationController {
                                         verifiedCandidates.setProgram(verified.getProgram());
                                         verifiedCandidates.setUpload_user(verified.getUpload_user());
                                         verifiedCandidatesService.saveVerifiedCandidates(verifiedCandidates);
+                                        message.append("row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution()+" Exists and has been Modified \n");
 
                                     } else {
-                                        uploadResponse.setStatus(200);
-                                        uploadResponse.setMessage("row: " + columns + " with candidate " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Already Exists with a complete status can't be changed ");
+                                        message.append("row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Already Exists with a complete status can't be changed \n");
                                     }
 
                                 } catch (VerifiedCandidatesNotFoundException e) {
-                                    uploadResponse.setStatus(500);
                                     verifiedCandidatesService.saveVerifiedCandidates(verified);
+                                    message.append(roww+" New Candidates Added \n");
                                 }
                             }
                         }
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    file1.setError("Error Uploading File Please Try Again");
+                    files.add(file1);
+                    jsonResponse.setFiles(files);
+                    return jsonObjectConversionUtility.objectToJson(jsonResponse);
                 }
 
 
             }
-            JsonObjectConversionUtility jsonObjectConversionUtility = new JsonObjectConversionUtility();
-            return jsonObjectConversionUtility.objectToJson(uploadResponse);
+            file1.setError(message.toString());
+            files.add(file1);
+            jsonResponse.setFiles(files);
+            return jsonObjectConversionUtility.objectToJson(jsonResponse);
 
         }
-        JsonObjectConversionUtility jsonObjectConversionUtility = new JsonObjectConversionUtility();
-        return jsonObjectConversionUtility.objectToJson(uploadResponse);
+        file1.setError("Please Load Your File");
+        files.add(file1);
+        jsonResponse.setFiles(files);
+        return jsonObjectConversionUtility.objectToJson(jsonResponse);
     }
 
-//    UploadResponse uploadResponse=new UploadResponse();
-//            uploadResponse.setStatus(200);
-//            uploadResponse.setMessage(file.getName()+" Successfully Uploaded");
-//    JsonObjectConversionUtility jsonObjectConversionUtility=new JsonObjectConversionUtility();
-//           return jsonObjectConversionUtility.objectToJson(uploadResponse);
+    private String validateUploadFileColumnValues(JsonResponse jsonResponse, JsonObjectConversionUtility jsonObjectConversionUtility, File file1, List<File> files, int columns, ArrayList columnNames, int roww) {
+        file1.setError(columnNames.get(columns)+" can't be null on row: "+roww);
+        files.add(file1);
+        jsonResponse.setFiles(files);
+        return jsonObjectConversionUtility.objectToJson(jsonResponse);
+    }
+
+
 }
