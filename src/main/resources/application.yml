@@ -34,9 +34,9 @@ spring:
 
   datasource:
     driver: com.mysql.jdbc.Driver
-    url: jdbc:mysql://sql2.freemysqlhosting.net:3306/sql2222050?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
-    username: sql2222050
-    password: yP7!wA5*
+    url: jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10226556?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
+    username: sql10226556
+    password: QfjWllJ5FS
 
 # Keep the connection alive if idle for a long time (needed in production)
     testWhileIdle: true
