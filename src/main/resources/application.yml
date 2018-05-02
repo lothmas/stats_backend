@@ -1,5 +1,24 @@
 #server:
-#  port: 8090
+#  port: 8443
+#  ssl:
+##    key-alias: goldenxchange
+#    key-password: G0ld3nxchang3
+#    key-store: classpath:goldenXchange.jks
+#    key-store-provider: SUN
+#    key-store-type: JKS
+
+
+#server:
+#  port: 8443
+#  ssl:
+#    key-alias: goldenxchangeca
+#    key-password: G0ld3nxchang3
+#    key-store-type: JKS
+#    key-store-provider: SUN
+#    key-store: classpath:goldenXchangeTrustStore
+
+
+
 #  context-path: /iqa
 
 #db:
@@ -33,10 +52,10 @@ spring:
           max-request-size: 20MB
 
   datasource:
-      driver: com.mysql.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/verify?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
-      username: root
-      password: l0u1srutendo
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/verify?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
+    username: root
+    password: l0u1srutendo
 
 # Keep the connection alive if idle for a long time (needed in production)
     testWhileIdle: true
@@ -48,11 +67,12 @@ spring:
 
 # Hibernate ddl auto (create, create-drop, update)
     hibernate:
-      
 #
 ### Naming strategy
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       ddl-auto: update
+
+
 # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
 # stripped before adding them to the entity manager)
 
@@ -69,4 +89,4 @@ security:
 
   thymeleaf:
     prefix: classpath:/templates
-
+  require-ssl: true
