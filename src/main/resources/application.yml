@@ -1,5 +1,5 @@
-server:
-  port: ${PORT:5000}
+#server:
+#  port: 8090
 #  context-path: /iqa
 
 #db:
