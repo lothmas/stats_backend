@@ -1,5 +1,5 @@
-#server:
-#  port: 8443
+server:
+  port: 8090
 #  ssl:
 ##    key-alias: goldenxchange
 #    key-password: G0ld3nxchang3
