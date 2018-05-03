@@ -89,4 +89,4 @@ security:
 
   thymeleaf:
     prefix: classpath:/templates
-  require-ssl: true
+
