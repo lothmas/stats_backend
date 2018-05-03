@@ -1,24 +1,5 @@
 #server:
-#  port: 8443
-#  ssl:
-##    key-alias: goldenxchange
-#    key-password: G0ld3nxchang3
-#    key-store: classpath:goldenXchange.jks
-#    key-store-provider: SUN
-#    key-store-type: JKS
-
-
-#server:
-#  port: 8443
-#  ssl:
-#    key-alias: goldenxchangeca
-#    key-password: G0ld3nxchang3
-#    key-store-type: JKS
-#    key-store-provider: SUN
-#    key-store: classpath:goldenXchangeTrustStore
-
-
-
+#  port: 8090
 #  context-path: /iqa
 
 #db:
@@ -67,11 +48,10 @@ spring:
 
 # Hibernate ddl auto (create, create-drop, update)
     hibernate:
+
 #
 ### Naming strategy
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-#      ddl-auto: update
-
 
 # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
 # stripped before adding them to the entity manager)
