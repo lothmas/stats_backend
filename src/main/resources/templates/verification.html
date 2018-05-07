@@ -226,11 +226,27 @@
 
 					<div class="col-md-12">
 						<div>
-							<label th:if="${option==1}" class="btn btn-theme  active" ><input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
-							<label th:if="${option==2}" class="btn btn-theme" ><input  value="1" type="radio"   name="option" onclick='this.form.submit()'/><a><h5>National Qualifications</h5></a></label>
+							<label th:if="${option==1}" class="btn btn-info  active" >
+								<input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/>
+								<!--<a><h5>National Qualifications</h5></a>-->
+								<img src="/assets/img/national.png"/>
+							</label>
+							<label th:if="${option==2}" class="btn btn-theme" >
+								<input  value="1" type="radio"   name="option" onclick='this.form.submit()'/>
+								<img src="/assets/img/national.png"/>
 
-							<label th:if="${option==1}" class="btn btn-theme"><input  type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
-							<label th:if="${option==2}" class="btn btn-theme active"><input checked="checked" type="radio" name="option" value="2" onclick='this.form.submit()'/><a><h5>International Professional Qualifications</h5></a></label>
+
+							</label>
+
+							<label th:if="${option==1}" class="btn btn-theme">
+								<input  type="radio" name="option" value="2" onclick='this.form.submit()'/>
+								<img src="/assets/img/national1.png"/>
+
+							</label>
+							<label th:if="${option==2}" class="btn btn-info active">
+								<input checked="checked" type="radio" name="option" value="2" onclick='this.form.submit()'/>
+								<img src="/assets/img/national1.png"/>
+							</label>
 
 							<noscript><input type="submit" value="Submit"/></noscript>
 							<p></p>
