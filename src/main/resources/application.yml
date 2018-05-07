@@ -34,9 +34,9 @@ spring:
 
   datasource:
     driver: com.mysql.jdbc.Driver
-    url: jdbc:mysql://95.142.155.121:3306/everifyo_test1?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
-    username: everifyo_root
-    password: l0u1srutendo
+    url: jdbc:mysql://den1.mysql5.gear.host:3306/everify?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Europe/London
+    username: everify
+    password: Bt71CT-s?8oF
 
 # Keep the connection alive if idle for a long time (needed in production)
     testWhileIdle: true
