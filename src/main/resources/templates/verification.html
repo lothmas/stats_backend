@@ -365,13 +365,13 @@
 								</div>
 								<div class="result-price">
 									<div class="text-success" th:if="${authenticationStatus==('1')}"  >
-										<div th:if="${verificationResults.outcome==(1)}"><h4>QUALIFICATION IS AUTHENTIC</h4>
+										<div th:if="${verifiedCandidate.outcome==(1)}"><h4>QUALIFICATION IS AUTHENTIC</h4>
 										<div><span class="glyphicon glyphicon-saved"></span>
 										<small></small></div>
 										</div>
 									</div>
 									<div class="text-danger" th:if="${authenticationStatus==('1')}">
-										<div th:if="${verificationResults.outcome==(2)}"><h4> QUALIFICATION NOT AUTHENTIC</h4>
+										<div th:if="${verifiedCandidate.outcome==(2)}"><h4> QUALIFICATION NOT AUTHENTIC</h4>
 										<div><span class="glyphicon glyphicon-remove"></span>
 										<small></small></div>
 										</div>
