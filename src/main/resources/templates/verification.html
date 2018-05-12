@@ -357,7 +357,7 @@
 									<h5 th:if="${!verificationResults.certificateNumber.isEmpty()}">Certificate Number:<p class="location"   th:text="${' '+verificationResults.certificateNumber}"></p></h5>
 									<h5 th:if="${verificationResults.dateAwarded!=null}">Awarding Date:<p class="location"  th:text="${' '+verificationResults.dateAwarded}"></p></h5>
 									<h5 th:if="${!verificationResults.firstName.isEmpty()}">Name<p class="location"  th:text="${''+'   '+verificationResults.firstName}"></p></h5>
-									<h5 th:if="${!verificationResults.surname.isEmpty()}">Surname<p class="location"  th:text="${':       '+verificationResults.surname}"></p></h5>
+									<h5 th:if="${!verificationResults.surname.isEmpty()}">Surname<p class="location"  th:text="${'       '+verificationResults.surname}"></p></h5>
 									<!--<p class="desc">-->
 										<!--Nunc et ornare ligula. Aenean commodo lectus turpis, eu laoreet risus lobortis quis. Suspendisse vehicula mollis magna vel aliquet. Donec ac tempor neque, convallis euismod mauris. Integer dictum dictum ipsum quis viverra.-->
 									<!--</p>-->
@@ -365,27 +365,27 @@
 								</div>
 								<div class="result-price">
 									<div class="text-success" th:if="${authenticationStatus==('1')}"  >
-										<div th:if="${verifiedCandidate.outcome==(1)}"><h4>QUALIFICATION IS AUTHENTIC</h4>
+										<div ><h4>QUALIFICATION IS AUTHENTIC</h4>
 										<div><span class="glyphicon glyphicon-saved"></span>
 										<small></small></div>
 										</div>
 									</div>
-									<div class="text-danger" th:if="${authenticationStatus==('1')}">
-										<div th:if="${verifiedCandidate.outcome==(2)}"><h4> QUALIFICATION NOT AUTHENTIC</h4>
+									<div class="text-danger" th:if="${authenticationStatus==('2')}">
+										<div><h4> QUALIFICATION NOT AUTHENTIC</h4>
 										<div><span class="glyphicon glyphicon-remove"></span>
 										<small></small></div>
 										</div>
 									</div>
-									<div class="text-warning" th:if="${authenticationStatus==('2')}">
+									<div class="text-warning" th:if="${authenticationStatus==('3')}">
 										<div><h4>REQUEST LOGGED</h4></div>
 										<span class="glyphicon glyphicon-time"></span>
 										<small th:text="${'Initial Request Date: '+initialRequestDate}"></small>
 									</div>
-									<div class="text-success" th:if="${authenticationStatus==('3')}">
-										<h4>QUALIFICATION IS AUTHENTIC</h4>
-										<span class="glyphicon glyphicon-saved"></span>
-										<small></small>
-									</div>
+									<!--<div class="text-success" th:if="${authenticationStatus==('3')}">-->
+										<!--<h4>QUALIFICATION IS AUTHENTIC</h4>-->
+										<!--<span class="glyphicon glyphicon-saved"></span>-->
+										<!--<small></small>-->
+									<!--</div>-->
 									<!--<a title="Feature Coming Soon Not Yet Available" th:disabled="true" class="btn btn-inverse btn-block">View Transcript</a>-->
 								</div>
 
@@ -410,80 +410,7 @@
 		<!-- end #content -->
 		
         <!-- begin theme-panel -->
-        <div class="theme-panel">
-            <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
-            <div class="theme-panel-content">
-                <h5 class="m-t-0">Color Theme</h5>
-                <ul class="theme-list clearfix">
-                    <li class="active"><a href="javascript:;" class="bg-green" data-theme="default" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Default">&amp;nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-red" data-theme="red" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Red">&amp;nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-blue" data-theme="blue" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Blue">&amp;nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-purple" data-theme="purple" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Purple">&amp;nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-orange" data-theme="orange" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Orange">&amp;nbsp;</a></li>
-                    <li><a href="javascript:;" class="bg-black" data-theme="black" data-click="theme-selector" data-toggle="tooltip" data-trigger="hover" data-container="body" data-title="Black">&amp;nbsp;</a></li>
-                </ul>
-                <div class="divider"></div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label double-line">Header Styling</div>
-                    <div class="col-md-7">
-                        <select name="header-styling" class="form-control input-sm">
-                            <option value="1">default</option>
-                            <option value="2">inverse</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label">Header</div>
-                    <div class="col-md-7">
-                        <select name="header-fixed" class="form-control input-sm">
-                            <option value="1">fixed</option>
-                            <option value="2">default</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label double-line">Sidebar Styling</div>
-                    <div class="col-md-7">
-                        <select name="sidebar-styling" class="form-control input-sm">
-                            <option value="1">default</option>
-                            <option value="2">grid</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label">Sidebar</div>
-                    <div class="col-md-7">
-                        <select name="sidebar-fixed" class="form-control input-sm">
-                            <option value="1">fixed</option>
-                            <option value="2">default</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label double-line">Sidebar Gradient</div>
-                    <div class="col-md-7">
-                        <select name="content-gradient" class="form-control input-sm">
-                            <option value="1">disabled</option>
-                            <option value="2">enabled</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-5 control-label double-line">Content Styling</div>
-                    <div class="col-md-7">
-                        <select name="content-styling" class="form-control input-sm">
-                            <option value="1">default</option>
-                            <option value="2">black</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row m-t-10">
-                    <div class="col-md-12">
-                        <a href="#" class="btn btn-inverse btn-block btn-sm" data-click="reset-local-storage"><i class="fa fa-refresh m-r-3"></i> Reset Local Storage</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- end theme-panel -->
 		
 		<!-- begin scroll to top btn -->

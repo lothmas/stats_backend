@@ -114,6 +114,10 @@ public class VerificationController {
                 return "profile";
             } else if (url.contains("verification_login")) {
                 String x = login(model, session, username, password, redirectAttributes);
+                if (x.equals("login")) {
+                    redirectAttributes.addFlashAttribute("alertMessage", "!! Please Provide Correct Credentials");
+                    return "redirect:login";
+                }
                 if (x != null) return x;
             }
 
@@ -134,9 +138,7 @@ public class VerificationController {
 
             return "profile";
         } catch (ProfilesNotFoundException | NoSuchAlgorithmException e) {
-            redirectAttributes.addFlashAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
-            model.addAttribute("alertMessage", "Wrong Login Credentials Please Provide Correct Credentials");
-            return "redirect:login";
+            return "login";
         } catch (CountryNotFoundException e) {
             e.printStackTrace();
         }
@@ -145,6 +147,10 @@ public class VerificationController {
 
     @RequestMapping(value = {"/verification"}, method = RequestMethod.GET)
     public String verification(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "checkOutValue", required = false) Double checkOutValue) {
+        ProfileEntity profileEntity2 = (ProfileEntity) session.getAttribute("profile");
+        if (null == profileEntity2) {
+            return "redirect:/";
+        }
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         model.addAttribute("option", 1);
@@ -175,7 +181,10 @@ public class VerificationController {
     public String getInstuteByCountryId(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId
             , @RequestParam(value = "instituteId", required = false) String instituteId, @RequestParam(value = "candidateId", required = false) String candidateId
             , @RequestParam(value = "action", required = false) String action, @RequestParam(value = "option", required = false) String option) {
-
+        ProfileEntity profileEntity2 = (ProfileEntity) session.getAttribute("profile");
+        if (null == profileEntity2) {
+            return "redirect:/";
+        }
         model.addAttribute("option", Integer.valueOf(option));
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
@@ -185,6 +194,7 @@ public class VerificationController {
             model.addAttribute("profile", session.getAttribute("profile"));
             model.addAttribute("countries", session.getAttribute("countries"));
             model.addAttribute("searchButton", false);
+            //get institute from provided country
             if (url.contains("getInstitutions") && candidateId == null && instituteId == null) {
 
                 if (option.equals("2")) {
@@ -217,6 +227,8 @@ public class VerificationController {
                 }
 
                 return "verification";
+
+                //start request qualification request. check if both candidateId and InstituteId is provided
             } else if (url.contains("getInstitutions") && candidateId != null && instituteId != null && !candidateId.isEmpty()) {
                 verificationRequest(instituteId, candidateId, model, session);
                 if (option.equals("2")) {
@@ -250,6 +262,19 @@ public class VerificationController {
 
     public void verificationRequest(String instituteId, String candidateId, Model model, HttpSession session) {
         ProfileEntity profiles = (ProfileEntity) session.getAttribute("profile");
+        ProfileEntity profileEntity1 = null;
+
+        try {
+            profileEntity1 = profilesService.findUserByUserId(profiles.getId());
+            if (null == profileEntity1.getBalanceAmount() || (profileEntity1.getUserType().equals("1") && profileEntity1.getBalanceAmount() < 5)
+                    || (profileEntity1.getUserType().equals("2") && profileEntity1.getBalanceAmount() < 10)
+                    || (profileEntity1.getUserType().equals("3") && profileEntity1.getBalanceAmount() < 15)
+                    || (profileEntity1.getUserType().equals("4") && profileEntity1.getBalanceAmount() < 20)) {
+                model.addAttribute("errorMessage", "You Can't Make An Authentication Request: Please Top-Up Your Account First");
+            }
+        } catch (ProfilesNotFoundException e2) {
+            return; //if account cn't be found then abort process
+        }
 
         try {
             InstitutesEntity institutesEntity = institutesService.findInstitutesById(Integer.parseInt(instituteId));
@@ -266,105 +291,53 @@ public class VerificationController {
                 }
             }
 
+            VerificationRequestEntity verificationRequestEntity = new VerificationRequestEntity();
 
-            List<CandidatesVerifiedEntity> verifiedCandidate = verifiedCandidatesService.getVerifiedCandidatesByCandidateIdAndInstituteId(Integer.parseInt(instituteId), candidateId);
-
-
-            long diffInMillies = Math.abs(new Date().getTime() - verifiedCandidate.get(0).getUpdateDate().getTime());
-            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
-            if (diff > 31) {
-                throw new VerifiedCandidatesNotFoundException("");
-            }
-
-            model.addAttribute("verifiedCandidate", verifiedCandidate);
-
-
-            model.addAttribute("authenticationStatus", "1");
-
-        } catch (VerifiedCandidatesNotFoundException e) {
             try {
+                //check if a request has been made for the same candidate by the requester
+                try {
+                    VerificationRequestEntity verificationRequestEntity1 = verificationRequestService.VerificationRequestCandidateIdAndInstituteIdAndUserId(candidateId, Integer.parseInt(instituteId), profiles.getId());
 
+                    if (verificationRequestEntity1.getProcessStatus() == 2) {
+                        long diffInMillies = Math.abs(new Date().getTime() - verificationRequestEntity1.getRequestDate().getTime());
+                        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                        if (diff > 31) {
+                            //if last responded request has more than 31 days then create new request and deduct request charge
+                            createRequestAndMakeDeductions(instituteId, candidateId, model, profiles, verificationRequestEntity, profileEntity1);
+
+                        }
+                    }
+
+
+                } catch (VerificationRequestNotFoundException e) {
+                    // no existing verification made then create new verification request
+                    createRequestAndMakeDeductions(instituteId, candidateId, model, profiles, verificationRequestEntity, profileEntity1);
+
+                }
+
+
+                List<CandidatesVerifiedEntity> verifiedCandidate = verifiedCandidatesService.getVerifiedCandidatesByCandidateIdAndInstituteId(Integer.parseInt(instituteId), candidateId);
+
+                model.addAttribute("verifiedCandidate", verifiedCandidate);
+                model.addAttribute("authenticationStatus", String.valueOf(verifiedCandidate.get(0).getOutcome()));
+
+            } catch (VerifiedCandidatesNotFoundException e) {
+                //create response
                 CandidatesVerifiedEntity candidatesVerifiedEntity = new CandidatesVerifiedEntity();
-                VerificationRequestEntity verificationRequestEntity = verificationRequestService.VerificationRequestCandidateIdAndInstituteIdAndUserId(candidateId, Integer.parseInt(instituteId), profiles.getId());
-                candidatesVerifiedEntity.setCandidateNumber(verificationRequestEntity.getCandidateNumber());
+                candidatesVerifiedEntity.setCandidateNumber(candidateId);
                 candidatesVerifiedEntity.setProgram("");
                 candidatesVerifiedEntity.setFirstName("");
                 candidatesVerifiedEntity.setSurname("");
                 candidatesVerifiedEntity.setCertificateNumber("");
+
                 candidatesVerifiedEntity.setDateAwarded(null);
 
-                model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
+
                 model.addAttribute("verifiedCandidate", candidatesVerifiedEntity);
-                model.addAttribute("authenticationStatus", 1);
-            } catch (VerificationRequestNotFoundException e1) {
-
-                ProfileEntity profileEntity = (ProfileEntity) session.getAttribute("profile");
-                ProfileEntity profileEntity1 = null;
-                try {
-                    profileEntity1 = profilesService.findUserByUserId(profileEntity.getId());
-                } catch (ProfilesNotFoundException e2) {
-                    e2.printStackTrace();
-                }
-                if (null == profileEntity1.getBalanceAmount() || (profileEntity1.getUserType().equals("1") && profileEntity1.getBalanceAmount() < 5)
-                        || (profileEntity1.getUserType().equals("2") && profileEntity1.getBalanceAmount() < 10)
-                        || (profileEntity1.getUserType().equals("3") && profileEntity1.getBalanceAmount() < 15)
-                        || (profileEntity1.getUserType().equals("4") && profileEntity1.getBalanceAmount() < 20)) {
-                    model.addAttribute("errorMessage", "You Can't Make An Authentication Request: Please Top-Up Your Account First");
-                } else {
-
-                    VerificationRequestEntity verificationRequestEntity = new VerificationRequestEntity();
-                    verificationRequestEntity.setCandidateNumber(candidateId);
-                    verificationRequestEntity.setEnabled(1);
-                    verificationRequestEntity.setInstitute(Integer.parseInt(instituteId));
-                    verificationRequestEntity.setProcessStatus(1);
-                    long time = System.currentTimeMillis();
-                    java.sql.Date date = new java.sql.Date(time);
-                    verificationRequestEntity.setRequestDate(date);
-                    verificationRequestEntity.setRequesterId(profiles.getId());
-                    try {
-
-                        if (profileEntity1.getUserType().equals("1")) {
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 5);
-                            verificationRequestEntity.setAmountPaid(5.00);
-                        }
-                        if (profileEntity1.getUserType().equals("2")) {
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 10);
-                            verificationRequestEntity.setAmountPaid(10.00);
-                        }
-                        if (profileEntity1.getUserType().equals("3")) {
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 15);
-                            verificationRequestEntity.setAmountPaid(15.00);
-                        }
-                        if (profileEntity1.getUserType().equals("4")) {
-                            profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 20);
-                            verificationRequestEntity.setAmountPaid(20.00);
-                        }
-
-                        verificationRequestService.saveVerificationRequest(verificationRequestEntity);
-                        profilesService.saveUser(profileEntity1);
-                    } catch (Exception e2) {
-                        model.addAttribute("errorMessage", "Request Not Successfully Sent");
-
-                    }
-
-
-                    CandidatesVerifiedEntity candidatesVerifiedEntity = new CandidatesVerifiedEntity();
-                    candidatesVerifiedEntity.setCandidateNumber(verificationRequestEntity.getCandidateNumber());
-                    candidatesVerifiedEntity.setProgram("");
-                    candidatesVerifiedEntity.setFirstName("");
-                    candidatesVerifiedEntity.setSurname("");
-                    candidatesVerifiedEntity.setCertificateNumber("");
-
-                    candidatesVerifiedEntity.setDateAwarded(null);
-
-
-                    model.addAttribute("verifiedCandidate", candidatesVerifiedEntity);
-                    model.addAttribute("authenticationStatus", "2");
-                    model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
-                }
-                //@TODO call webservice
+                model.addAttribute("authenticationStatus", "3");
+                model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
             }
+
 
         } catch (InstitutesNotFoundException e) {
             e.printStackTrace();
@@ -373,9 +346,49 @@ public class VerificationController {
 
     }
 
+    private void createRequestAndMakeDeductions(String instituteId, String candidateId, Model model, ProfileEntity profiles, VerificationRequestEntity verificationRequestEntity, ProfileEntity profileEntity1) {
+        verificationRequestEntity.setCandidateNumber(candidateId);
+        verificationRequestEntity.setEnabled(1);
+        verificationRequestEntity.setInstitute(Integer.parseInt(instituteId));
+        verificationRequestEntity.setProcessStatus(1);
+        long time = System.currentTimeMillis();
+        java.sql.Date date = new java.sql.Date(time);
+        verificationRequestEntity.setRequestDate(date);
+        verificationRequestEntity.setRequesterId(profiles.getId());
+        try {
+
+            if (profileEntity1.getUserType().equals("1")) {
+                profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 5);
+                verificationRequestEntity.setAmountPaid(5.00);
+            }
+            if (profileEntity1.getUserType().equals("2")) {
+                profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 10);
+                verificationRequestEntity.setAmountPaid(10.00);
+            }
+            if (profileEntity1.getUserType().equals("3")) {
+                profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 15);
+                verificationRequestEntity.setAmountPaid(15.00);
+            }
+            if (profileEntity1.getUserType().equals("4")) {
+                profileEntity1.setBalanceAmount(profileEntity1.getBalanceAmount() - 20);
+                verificationRequestEntity.setAmountPaid(20.00);
+            }
+
+            verificationRequestService.saveVerificationRequest(verificationRequestEntity);
+            profilesService.saveUser(profileEntity1);
+        } catch (Exception e2) {
+            model.addAttribute("errorMessage", "Request Not Successfully Sent");
+
+        }
+    }
+
     @RequestMapping(value = {"/payment", "/cart", "/complete", "/invoice"})
     public String payment(HttpServletRequest request, Model model, HttpSession session, @RequestParam(value = "countryId", required = false) String countryId, @RequestParam(value = "userTypeCharge", required = false) String userTypeCharge
             , @RequestParam(value = "qty", required = false) String qty) {
+        ProfileEntity profileEntity2 = (ProfileEntity) session.getAttribute("profile");
+        if (null == profileEntity2) {
+            return "redirect:/";
+        }
         String url = request.getRequestURI();
         int index = url.lastIndexOf("/");
         if (index != -1) {
@@ -462,6 +475,10 @@ public class VerificationController {
 
     @RequestMapping(value = {"/upload"})
     public String upload(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session, @RequestParam(value = "file", required = false) MultipartFile file) {
+        ProfileEntity profileEntity2 = (ProfileEntity) session.getAttribute("profile");
+        if (null == profileEntity2) {
+            return "redirect:/";
+        }
         String url = request.getRequestURI();
         model.addAttribute("profile", session.getAttribute("profile"));
         int index = url.lastIndexOf("/");
@@ -609,8 +626,7 @@ public class VerificationController {
                                         message.append("[ Row " + columns + " Was not Processed it has a NULL on one of its cells ]");
                                         continue ROW;
                                     }
-                                }
-                                catch (Exception dff){
+                                } catch (Exception dff) {
                                     file1.setError(message.toString());
                                     files.add(file1);
                                     jsonResponse.setFiles(files);
@@ -738,10 +754,10 @@ public class VerificationController {
                                     if (columnNames.get(columns).equals("institute")) {
                                         try {
 //                                            if (null != name && !name.isEmpty()) {
-                                                Double institute = row.getCell(columns).getNumericCellValue();
-                                                int iend = institute.toString().indexOf(".");
-                                                String subString = institute.toString().substring(0, iend);
-                                                verified.setInstitution(Integer.valueOf(String.valueOf(subString)));
+                                            Double institute = row.getCell(columns).getNumericCellValue();
+                                            int iend = institute.toString().indexOf(".");
+                                            String subString = institute.toString().substring(0, iend);
+                                            verified.setInstitution(Integer.valueOf(String.valueOf(subString)));
 //                                            } else {
 //                                                return validateUploadFileColumnValues(jsonResponse, jsonObjectConversionUtility, file1, files, columns, "institute", roww);
 //
@@ -776,15 +792,15 @@ public class VerificationController {
                                         verifiedCandidates.setProgressStatus(verified.getProgressStatus());
                                         verifiedCandidates.setUpload_user(verified.getUpload_user());
                                         verifiedCandidatesService.saveVerifiedCandidates(verifiedCandidates);
-                                        message.append("[ "+"Row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Exists and has been Modified ]\n");
+                                        message.append("[ " + "Row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Exists and has been Modified ]\n");
 
                                     } else {
-                                        message.append("[ "+"Row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Already Exists with a complete status can't be changed ]\n");
+                                        message.append("[ " + "Row: " + roww + " with candidate:  " + verified.getCandidateNumber() + " for institute: " + verified.getInstitution() + " Already Exists with a complete status can't be changed ]\n");
                                     }
 
                                 } catch (VerifiedCandidatesNotFoundException e) {
                                     verifiedCandidatesService.saveVerifiedCandidates(verified);
-                                    message.append("[ "+roww + " New Candidates Added ]\n");
+                                    message.append("[ " + roww + " New Candidates Added ]\n");
                                 }
                             }
                         }

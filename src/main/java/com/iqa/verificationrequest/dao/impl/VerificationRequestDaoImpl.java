@@ -11,6 +11,7 @@ import com.iqa.verificationrequest.exception.VerificationRequestNotFoundExceptio
 import com.iqa.verificationrequest.model.VerificationRequestEntity;
 import com.iqa.utilities.AbstractDaoImpl;
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -58,6 +59,7 @@ public class VerificationRequestDaoImpl extends AbstractDaoImpl<VerificationRequ
                 .add(Restrictions.eq("institute", instituteId))
                 .add(Restrictions.eq("requesterId", requesterId))
                 .add(Restrictions.eq("enabled", 1))
+                .addOrder(Order.desc("id"))
                 .list();
 
         if (results.isEmpty()) {
