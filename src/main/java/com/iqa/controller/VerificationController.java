@@ -326,9 +326,12 @@ public class VerificationController {
                 CandidatesVerifiedEntity candidatesVerifiedEntity = new CandidatesVerifiedEntity();
                 if(null!=verificationRequestEntity.getCandidateNumber()){
                     model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
+                    model.addAttribute("authenticationStatus", "3");
+
 
                 }else{
                     model.addAttribute("initialRequestDate", verificationRequestEntity1.getRequestDate());
+                    model.addAttribute("authenticationStatus", "4");
 
                 }
                 candidatesVerifiedEntity.setCandidateNumber(candidateId);
@@ -341,7 +344,6 @@ public class VerificationController {
 
 
                 model.addAttribute("verifiedCandidate", candidatesVerifiedEntity);
-                model.addAttribute("authenticationStatus", "3");
             }
 
 

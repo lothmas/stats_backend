@@ -53,7 +53,7 @@
 					</button>
 				</div>
 				<!-- end mobile sidebar expand / collapse button -->
-				
+
 				<!-- begin header navigation right -->
 				<ul class="nav navbar-nav navbar-right">
                     <li>
@@ -157,167 +157,22 @@
 		<!-- end #header -->
 		
 		<!-- begin #sidebar -->
-				<div id="sidebar" class="sidebar sidebar-transparent">
-			<!-- begin sidebar scrollbar -->
-			<div data-scrollbar="true" data-height="100%">
+        <div th:include="fragments :: navigation" />
 
-				<!-- begin sidebar user -->
-				<ul class="nav">
-					<li class="nav-profile">
-						<div class="image">
-							<a href="javascript:;"><img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" alt="no profile pic set" /></a>
-						</div>
-						<div class="info" th:text="${result.username}"/>
-					</li>
-				</ul>
-				<!-- end sidebar user -->
-				<!-- begin sidebar nav -->
-                <ul class="nav">
-                    <li class="nav-header">Navigation</li>
-
-                    <li><a th:href="@{/profile.html}">
-                        <i class="active fa fa-laptop"></i>
-                        <span>Profile</span>
-                    </a></li>
-
-                    <li >
-                        <a th:href="@{/verification}">
-                            <i class="fa fa-address-card"></i>
-                            <span>Verification</span>
-                        </a>
-                    </li>
-
-                    <li ><a th:href="@{/cart}">
-                        <i class="fa fa-share-square-o "></i>
-                        <span>Top-Up Account</span>
-                    </a></li>
-
-
-
-                    <li >
-                        <a th:href="@{/invoice}">
-                            <i class="fa fa-address-card"></i>
-                            <span>Invoice / History </span>
-                        </a>
-                    </li>
-
-
-                    <li >
-                        <a th:href="@{/upload}">
-                            <i class="fa fa-clock-o"></i>
-                            <span>Upload Qualifications </span>
-                        </a>
-                    </li>
-                                 <!-- end sidebar minify button -->
-                </ul>
-				<!-- end sidebar nav -->
-			</div>
-			<!-- end sidebar scrollbar -->
-		</div>
-		<div class="sidebar-bg"></div>
+        <div class="sidebar-bg"></div>
 		<!-- end #sidebar -->
 
 		<!-- begin #content -->
         <div id="content" class="content">
-            <!-- begin breadcrumb -->
-            <!--<ol class="breadcrumb pull-right">-->
-                <!--<li><a href="javascript:;">Home</a></li>-->
-                <!--<li class="active">Profile</li>-->
-            <!--</ol>-->
+            <ol class="breadcrumb pull-right">
+                <li><a href="profile">Home</a></li>
+                <li class="active">Profile</li>
+            </ol>
             <!-- end breadcrumb -->
             <!-- begin page-header -->
-            <!--<h1 class="page-header">Dashboard-->
-                <!--&lt;!&ndash;<small>header small text goes here...</small>&ndash;&gt;-->
-            <!--</h1>-->
-            <!-- end page-header -->
+            <h1 class="page-header"><span  class="badge badge-pill badge-light">User Profile </span><small></small></h1>
+            <div th:include="fragments :: headerTabs" />
 
-            <!-- begin row -->
-            <div class="row">
-                <!-- begin col-3 -->
-                <form class="navbar-form full-width" action="#" data-th-action="@{./verification}" th:object="${verification}"
-                      method="post"
-                      enctype="multipart/form-data">
-                <div class="col-md-3 col-sm-6">
-                    <div class="widget widget-stats bg-green">
-                        <div class="stats-icon"><i class="fa fa-desktop"></i></div>
-                        <div class="stats-info">
-                            <h4>Qualification</h4>
-                            <p>Verification</p>
-                        </div>
-                        <div class="stats-link">
-                            <a href="verification">Make Request <i class="fa fa-arrow-circle-o-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="widget widget-stats bg-blue">
-                            <div class="stats-icon"><i class="fa fa-chain-broken"></i></div>
-                            <div class="stats-info" th:if="${result.balanceAmount!=null}">
-                                <h4 th:text="${'USD $'+result.balanceAmount}"></h4>
-                                <p>Balance</p>
-                            </div>
-                            <div class="stats-info" th:if="${result.balanceAmount==null}">
-                                <h4>USD $0.00</h4>
-                                <p>Account</p>
-                            </div>
-                            <div class="stats-link">
-                                <a th:href="@{/cart}">Top Up <i class="fa fa-arrow-circle-o-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6">
-                        <div class="widget widget-stats bg-purple">
-                            <div class="stats-icon"><i class="fa fa-users"></i></div>
-                            <div class="stats-info">
-                                <h4>Invoice</h4>
-                                <p>Account</p>
-                            </div>
-                            <div class="stats-link">
-                                <a  th:href="@{/invoice}">Invoice / History <i class="fa fa-arrow-circle-o-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-3 col-sm-6">
-                        <div class="widget widget-stats bg-red">
-                            <div class="stats-icon"><i class="fa fa-users"></i></div>
-                            <div class="stats-info">
-                                <h4>Upload</h4>
-                                <p>Qualifications</p>
-                            </div>
-                            <div class="stats-link">
-                                <a  th:href="@{/upload}">Start Upload<i class="fa fa-arrow-circle-o-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <!-- end col-3 -->
-                <!-- begin col-3 -->
-
-                <!-- end col-3 -->
-                <!-- begin col-3 -->
-                <!--<div class="col-md-3 col-sm-6">-->
-                    <!--<div class="widget widget-stats bg-purple">-->
-                        <!--<div class="stats-icon"><i class="fa fa-users"></i></div>-->
-                        <!--<div class="stats-info">-->
-                            <!--<h4>Invoice</h4>-->
-                            <!--<p></p>-->
-                        <!--</div>-->
-                        <!--<div class="stats-link">-->
-                            <!--<a href="javascript:;">View History <i class="fa fa-arrow-circle-o-right"></i></a>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!-- end col-3 -->
-                <!-- begin col-3 -->
-
-
-
-
-
-            </div>
             <!-- end row -->
             <!-- begin row -->
             <div class="row">

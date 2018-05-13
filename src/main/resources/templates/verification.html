@@ -151,74 +151,29 @@
 			<!-- end container-fluid -->
 		</div>
 		<!-- end #header -->
-		
+
 		<!-- begin #sidebar -->
-		<div id="sidebar" class="sidebar sidebar-transparent">
-			<!-- begin sidebar scrollbar -->
-			<div data-scrollbar="true" data-height="100%">
-				<!-- begin sidebar user -->
-				<ul class="nav">
-					<li class="nav-profile">
-						<div class="image">
-							<a href="javascript:;"><img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" alt="NO INSTITUTIONAL LOGO SET" /></a>
-						</div>
-						<div class="info" th:text="${result.username}"/>
-					</li>
-				</ul>
-				<!-- end sidebar user -->
-				<!-- begin sidebar nav -->
-				<ul class="nav">
-					<li class="nav-header">Navigation</li>
+		<div th:include="fragments :: navigation" />
 
-					<li><a th:href="@{/profile.html}">
-						<i class="active fa fa-laptop"></i>
-						<span>Profile</span>
-					</a></li>
-
-					<li >
-						<a th:href="@{/verification}">
-							<i class="fa fa-address-card"></i>
-							<span>Verification</span>
-						</a>
-					</li>
-
-					<li ><a th:href="@{/cart}">
-						<i class="fa fa-share-square-o "></i>
-						<span>Top-Up Account</span>
-					</a></li>
-
-
-
-					<li >
-						<a th:href="@{/invoice}">
-							<i class="fa fa-address-card"></i>
-							<span>Invoice / History </span>
-						</a>
-					</li>
-					<!-- end sidebar minify button -->
-				</ul>
-				<!-- end sidebar nav -->
-			</div>
-			<!-- end sidebar scrollbar -->
-		</div>
 		<div class="sidebar-bg"></div>
 		<!-- end #sidebar -->
-		
+
 		<!-- begin #content -->
 		<div id="content" class="content">
 			<!-- begin breadcrumb -->
 			<ol class="breadcrumb pull-right">
-				<li><a href="javascript:;">Home</a></li>
+				<li><a href="profile">Home</a></li>
 				<li class="active">Verification</li>
 			</ol>
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">Verification | Authentication <small></small></h1>
+			<h1 class="page-header"><span  class="badge badge-pill badge-light">Verification | Authentication </span><small></small></h1>
 			<!-- end page-header -->
 
 			<!-- begin row -->
+			<div  th:include="fragments :: headerTabs" />
 
-			<div class="row">
+			<div class="row" >
 				<form class="navbar-form full-width" action="#" data-th-action="@{./getInstitutions}"
 					  method="post"	enctype="multipart/form-data">
 			    <!-- begin col-12 -->
@@ -356,29 +311,34 @@
 									<h5 th:if="${!verificationResults.candidateNumber.isEmpty()}">Candidate Number:<p class="location"   th:text="${' '+verificationResults.candidateNumber}"></p></h5>
 									<h5 th:if="${!verificationResults.certificateNumber.isEmpty()}">Certificate Number:<p class="location"   th:text="${' '+verificationResults.certificateNumber}"></p></h5>
 									<h5 th:if="${verificationResults.dateAwarded!=null}">Awarding Date:<p class="location"  th:text="${' '+verificationResults.dateAwarded}"></p></h5>
-									<h5 th:if="${!verificationResults.firstName.isEmpty()}">Name<p class="location"  th:text="${''+'   '+verificationResults.firstName}"></p></h5>
-									<h5 th:if="${!verificationResults.surname.isEmpty()}">Surname<p class="location"  th:text="${'       '+verificationResults.surname}"></p></h5>
+									<h5 th:if="${!verificationResults.firstName.isEmpty()}">Name:<p class="location"  th:text="${''+'   '+verificationResults.firstName}"></p></h5>
+									<h5 th:if="${!verificationResults.surname.isEmpty()}">Surname:<p class="location"  th:text="${'       '+verificationResults.surname}"></p></h5>
 									<!--<p class="desc">-->
 										<!--Nunc et ornare ligula. Aenean commodo lectus turpis, eu laoreet risus lobortis quis. Suspendisse vehicula mollis magna vel aliquet. Donec ac tempor neque, convallis euismod mauris. Integer dictum dictum ipsum quis viverra.-->
 									<!--</p>-->
 
 								</div>
-								<div class="result-price" align="center">
-									<div class="text-success" th:if="${authenticationStatus==('1')}"  >
+								<div class="result-price" >
+									<div class="text-success pull-right" th:if="${authenticationStatus==('1')}" >
 										<div ><h4>QUALIFICATION IS AUTHENTIC</h4>
-										<div><span class="glyphicon glyphicon-saved"></span>
+										<div><span class="glyphicon glyphicon-saved" style="font-size:90px;"></span>
 										<small></small></div>
 										</div>
 									</div>
 									<div class="text-danger" th:if="${authenticationStatus==('2')}">
 										<div><h4> QUALIFICATION NOT AUTHENTIC</h4>
-										<div><span class="glyphicon glyphicon-remove"></span>
+										<div><span class="glyphicon glyphicon-remove" style="font-size:90px;"></span>
 										<small></small></div>
 										</div>
 									</div>
 									<div class="text-warning" th:if="${authenticationStatus==('3')}" >
 										<div><h4>REQUEST LOGGED</h4></div>
-										<span class="glyphicon glyphicon-time"></span>
+										<span class="glyphicon glyphicon-time" style="font-size:90px;"></span>
+										<small th:text="${'Initial Request Date: '+initialRequestDate}"></small>
+									</div>
+									<div class="text-warning" th:if="${authenticationStatus==('4')}" >
+										<div><h4>REQUEST WAS LOGGED SUCESSFULLY  &amp; WAITING ASSESSMENT</h4></div>
+										<span class="glyphicon glyphicon-time" style="font-size:90px;"></span>
 										<small th:text="${'Initial Request Date: '+initialRequestDate}"></small>
 									</div>
 									<!--<div class="text-success" th:if="${authenticationStatus==('3')}">-->

@@ -157,55 +157,9 @@
 		<!-- end #header -->
 		
 		<!-- begin #sidebar -->
-				<div id="sidebar" class="sidebar sidebar-transparent">
-			<!-- begin sidebar scrollbar -->
-			<div data-scrollbar="true" data-height="100%">
-				<!-- begin sidebar user -->
-				<ul class="nav">
-					<li class="nav-profile">
-						<div class="image">
-							<a href="javascript:;"><img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" alt="no profile pic set" /></a>
-						</div>
-						<div class="info" th:text="${result.username}"/>
-					</li>
-				</ul>
-				<!-- end sidebar user -->
-				<!-- begin sidebar nav -->
-                <ul class="nav">
-                    <li class="nav-header">Navigation</li>
+        <div th:include="fragments :: navigation" />
 
-                    <li><a th:href="@{/profile.html}">
-                        <i class="active fa fa-laptop"></i>
-                        <span>Profile</span>
-                    </a></li>
-
-                    <li >
-                        <a th:href="@{/verification}">
-                            <i class="fa fa-address-card"></i>
-                            <span>Verification</span>
-                        </a>
-                    </li>
-
-                    <li ><a th:href="@{/cart}">
-                        <i class="fa fa-share-square-o "></i>
-                        <span>Top-Up Account</span>
-                    </a></li>
-
-
-
-                    <li >
-                        <a th:href="@{/invoice}">
-                            <i class="fa fa-address-card"></i>
-                            <span>Invoice / History </span>
-                        </a>
-                    </li>
-                                 <!-- end sidebar minify button -->
-                </ul>
-				<!-- end sidebar nav -->
-			</div>
-			<!-- end sidebar scrollbar -->
-		</div>
-		<!-- end #content -->
+        <!-- end #content -->
         <div class="sidebar-bg"></div>
         <!-- end #sidebar -->
 
@@ -213,12 +167,15 @@
         <div id="content" class="content">
             <!-- begin breadcrumb -->
             <ol class="breadcrumb hidden-print pull-right">
-                <li><a href="javascript:;">Home</a></li>
+                <li><a href="profile">Home</a></li>
                 <li class="active">Invoice</li>
             </ol>
+            <h1 class="page-header hidden-print"><span  class="badge badge-pill badge-light">Invoice | History</span></h1>
+
+            <div  th:include="fragments :: headerTabs" />
+
             <!-- end breadcrumb -->
             <!-- begin page-header -->
-            <h1 class="page-header hidden-print">Invoice / History</h1>
             <!-- end page-header -->
 
             <!-- begin invoice -->

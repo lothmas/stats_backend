@@ -10,160 +10,158 @@
 		<meta name="author" content="" />
 		<link rel="icon" href="img/fnb-logo.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		
+
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap.min.css" rel="stylesheet" />
 		<link href="css/bsg.css" rel="stylesheet" />
 	</div>
 
-	<div th:fragment="notifications">
-		<div id="header" class="header navbar-default">
-			<!-- begin navbar-header -->
-			<div class="navbar-header">
-				<a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b>Golden</b> -Xchange</a>
-				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-			</div>
-			<!-- end navbar-header -->
-
-			<!-- begin header-nav -->
-			<ul class="navbar-nav navbar-right">
-
-				<li class="dropdown" >
-					<a href="#" data-toggle="dropdown" class="dropdown-toggle f-s-14">
-						<i class="fa fa-bell"></i>
-						<span class="label" th:text="${notificationCount}"/>
-					</a>
-					<ul class="dropdown-menu media-list dropdown-menu-right" >
-						<li class="dropdown-header" th:text="${'NOTIFICATIONS ('+notificationCount}+')'"/>
-						<li class="media" th:each="notifications, rowStat : ${notifications}">
-							<a href="#" th:if="${null!=notifications.message}">
-								<div class="media-left">
-									<i th:if="${notifications.status==1}" class="fa fa-envelope media-object bg-silver-darker"></i>
-									<i th:if="${notifications.status==0}" class="fa fa-envelope media-object bg-warning"></i>
-
-									<i class="fab fa-facebook-messenger text-primary media-object-icon"></i>
-								</div>
-								<div class="media-body">
-									<div th:if="${notifications.status==1}"><h6  class="media-heading">Actioned  <i class="fa fa fa-envelope-open text-success"></i></h6></div>
-									<div th:if="${notifications.status==0}"><h6  class="media-heading">Pending Action   <i class="fa fa-envelope text-info"></i></h6></div>
-
-									<div th:each="msg : ${#strings.arraySplit(notifications.message, ',')}">
-										<p th:text="${msg}"></p>
-									</div>
-									<div class="text-muted f-s-11" th:text="${notifications.creationDate}"/>
-								</div>
-							</a>
-						</li>
-					</ul>
-				</li>
-				<li class="dropdown navbar-user">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img th:src="@{'data:image/jpeg;base64,'+${profile.profilePic}}"
-							 alt="no profile pic set"/>
-						<span class="d-none d-md-inline" th:text="${profile.userName}"></span> <b class="caret"></b>
-					</a>
-					<div class="dropdown-menu dropdown-menu-right">
-						<div class="dropdown-divider"></div>
-						<a th:href="@{/logout}" class="dropdown-item">Log Out</a>
+	<div th:fragment="headerTabs">
+		<div class="row">
+			<!-- begin col-3 -->
+			<form class="navbar-form full-width" action="#" data-th-action="@{./verification}" th:object="${verification}"
+				  method="post"
+				  enctype="multipart/form-data">
+				<div class="col-md-3 col-sm-6">
+					<div class="widget widget-stats bg-green">
+						<div class="stats-icon"><i class="fa fa-desktop"></i></div>
+						<div class="stats-info">
+							<h4>Qualification</h4>
+							<p>Verification</p>
+						</div>
+						<div class="stats-link">
+							<a href="verification">Make Request <i class="fa fa-arrow-circle-o-right"></i></a>
+						</div>
 					</div>
-				</li>
-			</ul>
-			<!-- end header navigation right -->
+				</div>
+				<div class="col-md-3 col-sm-6">
+					<div class="widget widget-stats bg-blue">
+						<div class="stats-icon"><i class="fa fa-chain-broken"></i></div>
+						<div class="stats-info" th:if="${result.balanceAmount!=null}">
+							<h4 th:text="${'USD $'+result.balanceAmount}"></h4>
+							<p>Balance</p>
+						</div>
+						<div class="stats-info" th:if="${result.balanceAmount==null}">
+							<h4>USD $0.00</h4>
+							<p>Account</p>
+						</div>
+						<div class="stats-link">
+							<a th:href="@{/cart}">Top Up <i class="fa fa-arrow-circle-o-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-3 col-sm-6">
+					<div class="widget widget-stats bg-purple">
+						<div class="stats-icon"><i class="fa fa-users"></i></div>
+						<div class="stats-info">
+							<h4>Invoice</h4>
+							<p>Account</p>
+						</div>
+						<div class="stats-link">
+							<a  th:href="@{/invoice}">Invoice / History <i class="fa fa-arrow-circle-o-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-md-3 col-sm-6">
+					<div class="widget widget-stats bg-red">
+						<div class="stats-icon"><i class="fa fa-users"></i></div>
+						<div class="stats-info">
+							<h4>Upload</h4>
+							<p>Qualifications</p>
+						</div>
+						<div class="stats-link">
+							<a  th:href="@{/upload}">Start Upload<i class="fa fa-arrow-circle-o-right"></i></a>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!-- end col-3 -->
+			<!-- begin col-3 -->
+
+			<!-- end col-3 -->
+			<!-- begin col-3 -->
+			<!--<div class="col-md-3 col-sm-6">-->
+			<!--<div class="widget widget-stats bg-purple">-->
+			<!--<div class="stats-icon"><i class="fa fa-users"></i></div>-->
+			<!--<div class="stats-info">-->
+			<!--<h4>Invoice</h4>-->
+			<!--<p></p>-->
+			<!--</div>-->
+			<!--<div class="stats-link">-->
+			<!--<a href="javascript:;">View History <i class="fa fa-arrow-circle-o-right"></i></a>-->
+			<!--</div>-->
+			<!--</div>-->
+			<!--</div>-->
+			<!-- end col-3 -->
+			<!-- begin col-3 -->
+
+
+
+
+
 		</div>
 	</div>
 
-	<div class="container-fluid hidden-xs hidden-sm" th:fragment="desktopTabs">
-		<div class="row">
+	<div th:fragment="navigation">
+		<div id="sidebar" class="sidebar sidebar-transparent">
+			<!-- begin sidebar scrollbar -->
+			<div data-scrollbar="true" data-height="100%">
 
-			<!-- begin col-3 -->
-			<div class="col-lg-2 col-md-6">
-				<div class="widget widget-stats bg-orange">
-					<div class="stats-icon"><i class="fa fa-file"></i></div>
-					<div class="stats-info">
-						<h3>NEW</h3>
-						<!--<p>New Donation</p>-->
-					</div>
-					<div class="stats-link">
-						<a href="new_donation">Create Donation<i class="fa fa-arrow-alt-circle-right"></i></a>
-					</div>
-				</div>
+				<!-- begin sidebar user -->
+				<ul class="nav">
+					<li class="nav-profile">
+						<div class="image">
+							<a href="javascript:;"><img th:src="@{'data:image/jpeg;base64,'+${result.picture}}" alt="no profile pic set" /></a>
+						</div>
+						<div class="info" th:text="${result.username}"/>
+					</li>
+				</ul>
+				<!-- end sidebar user -->
+				<!-- begin sidebar nav -->
+				<ul class="nav">
+					<li class="nav-header">Navigation</li>
+
+					<li><a th:href="@{/profile.html}">
+						<i class="active fa fa-laptop"></i>
+						<span>Profile</span>
+					</a></li>
+
+					<li >
+						<a th:href="@{/verification}">
+							<i class="fa fa-address-card"></i>
+							<span>Verification</span>
+						</a>
+					</li>
+
+					<li ><a th:href="@{/cart}">
+						<i class="fa fa-share-square-o "></i>
+						<span>Top-Up Account</span>
+					</a></li>
+
+
+
+					<li >
+						<a th:href="@{/invoice}">
+							<i class="fa fa-address-card"></i>
+							<span>Invoice / History </span>
+						</a>
+					</li>
+
+
+					<li >
+						<a th:href="@{/upload}">
+							<i class="fa fa-clock-o"></i>
+							<span>Upload Qualifications </span>
+						</a>
+					</li>
+					<!-- end sidebar minify button -->
+				</ul>
+				<!-- end sidebar nav -->
 			</div>
-			<!-- end col-3 -->
-
-			<!-- begin col-3 -->
-			<div class="col-lg-2 col-md-6">
-				<div class="widget widget-stats bg-yellow-darker">
-					<div class="stats-icon"><i class="fa fa-user"></i></div>
-					<div class="stats-info">
-						<h3>KEEPER</h3>
-						<!--<p>Keeper Donations</p>-->
-					</div>
-					<div class="stats-link">
-						<a href="keeper">View Keeper <i class="fa fa-arrow-alt-circle-right"></i></a>
-					</div>
-				</div>
-			</div>
-			<!-- end col-3 -->
-
-
-			<!-- begin col-3 -->
-			<div class="col-lg-2 col-md-6">
-				<div class="widget widget-stats bg-purple">
-					<div class="stats-icon"><i class="fa fa-clock"></i></div>
-					<div class="stats-info">
-						<h3>CONFIRM</h3>
-						<!--<p>Latest Donations</p>-->
-					</div>
-					<div class="stats-link">
-						<a href="current_donations">Confirmations<i class="fa fa-arrow-alt-circle-right"></i></a>
-					</div>
-				</div>
-			</div>
-			<!-- end col-3 -->
-			<!-- begin col-3 -->
-			<div class="col-lg-2 col-md-6">
-				<div class="widget widget-stats bg-white">
-					<div class="stats-icon"><i class="fa fa-table" aria-hidden="true"></i></div>
-					<div class="stats-info">
-						<h3>APPROVE</h3>
-						<!--<p>All Donations </p>-->
-					</div>
-					<div class="stats-link">
-						<a href="approvals">Approvals<i class="fa fa-arrow-alt-circle-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-2 col-md-6">
-				<div class="widget widget-stats bg-black-lighter">
-					<div class="stats-icon"><i class="fa fa-table" aria-hidden="true"></i></div>
-					<div class="stats-info">
-						<h3>ALL</h3>
-						<!--<p>All Donations </p>-->
-					</div>
-					<div class="stats-link">
-						<a href="donation_state">All Donations<i class="fa fa-arrow-alt-circle-right"></i></a>
-					</div>
-				</div>
-			</div><div class="col-lg-2 col-md-6">
-			<div class="widget widget-stats bg-red">
-				<div class="stats-icon"><i class="fa fa-upload" aria-hidden="true"></i></div>
-				<div class="stats-info">
-					<h3>UPLOADS</h3>
-					<!--<p>All Donations </p>-->
-				</div>
-				<div class="stats-link">
-					<a href="upload">Payment Proof<i class="fa fa-arrow-alt-circle-right"></i></a>
-				</div>
-			</div>
-		</div>
-
-
-			<!-- end col-3 -->
+			<!-- end sidebar scrollbar -->
 		</div>
 	</div>
 
@@ -191,7 +189,7 @@
 			</div>
 		</nav>
 	</div>
-	
+
 	<div th:fragment="internalMenu (activeMenuItem, title)">
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
