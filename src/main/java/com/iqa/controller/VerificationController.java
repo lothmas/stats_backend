@@ -292,11 +292,11 @@ public class VerificationController {
             }
 
             VerificationRequestEntity verificationRequestEntity = new VerificationRequestEntity();
-
+            VerificationRequestEntity verificationRequestEntity1 = null;
             try {
                 //check if a request has been made for the same candidate by the requester
                 try {
-                    VerificationRequestEntity verificationRequestEntity1 = verificationRequestService.VerificationRequestCandidateIdAndInstituteIdAndUserId(candidateId, Integer.parseInt(instituteId), profiles.getId());
+                    verificationRequestEntity1 = verificationRequestService.VerificationRequestCandidateIdAndInstituteIdAndUserId(candidateId, Integer.parseInt(instituteId), profiles.getId());
 
                     if (verificationRequestEntity1.getProcessStatus() == 2) {
                         long diffInMillies = Math.abs(new Date().getTime() - verificationRequestEntity1.getRequestDate().getTime());
@@ -324,6 +324,13 @@ public class VerificationController {
             } catch (VerifiedCandidatesNotFoundException e) {
                 //create response
                 CandidatesVerifiedEntity candidatesVerifiedEntity = new CandidatesVerifiedEntity();
+                if(null!=verificationRequestEntity.getCandidateNumber()){
+                    model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
+
+                }else{
+                    model.addAttribute("initialRequestDate", verificationRequestEntity1.getRequestDate());
+
+                }
                 candidatesVerifiedEntity.setCandidateNumber(candidateId);
                 candidatesVerifiedEntity.setProgram("");
                 candidatesVerifiedEntity.setFirstName("");
@@ -335,7 +342,6 @@ public class VerificationController {
 
                 model.addAttribute("verifiedCandidate", candidatesVerifiedEntity);
                 model.addAttribute("authenticationStatus", "3");
-                model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
             }
 
 

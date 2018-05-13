@@ -226,24 +226,24 @@
 
 					<div class="col-md-12">
 						<div>
-							<label th:if="${option==1}" class="btn btn-info  active" >
+							<label th:if="${option==1}" class="btn   active" >
 								<input checked="checked" value="1" type="radio"   name="option" onclick='this.form.submit()'/>
 								<!--<a><h5>National Qualifications</h5></a>-->
 								<img src="/assets/img/national.png"/>
 							</label>
-							<label th:if="${option==2}" class="btn btn-theme" >
+							<label th:if="${option==2}" class="btn " >
 								<input  value="1" type="radio"   name="option" onclick='this.form.submit()'/>
 								<img src="/assets/img/national.png"/>
 
 
 							</label>
 
-							<label th:if="${option==1}" class="btn btn-theme">
+							<label th:if="${option==1}" class="btn ">
 								<input  type="radio" name="option" value="2" onclick='this.form.submit()'/>
 								<img src="/assets/img/national1.png"/>
 
 							</label>
-							<label th:if="${option==2}" class="btn btn-info active">
+							<label th:if="${option==2}" class="btn  active">
 								<input checked="checked" type="radio" name="option" value="2" onclick='this.form.submit()'/>
 								<img src="/assets/img/national1.png"/>
 							</label>
@@ -363,7 +363,7 @@
 									<!--</p>-->
 
 								</div>
-								<div class="result-price">
+								<div class="result-price" align="center">
 									<div class="text-success" th:if="${authenticationStatus==('1')}"  >
 										<div ><h4>QUALIFICATION IS AUTHENTIC</h4>
 										<div><span class="glyphicon glyphicon-saved"></span>
@@ -376,7 +376,7 @@
 										<small></small></div>
 										</div>
 									</div>
-									<div class="text-warning" th:if="${authenticationStatus==('3')}">
+									<div class="text-warning" th:if="${authenticationStatus==('3')}" >
 										<div><h4>REQUEST LOGGED</h4></div>
 										<span class="glyphicon glyphicon-time"></span>
 										<small th:text="${'Initial Request Date: '+initialRequestDate}"></small>
