@@ -304,7 +304,6 @@ public class VerificationController {
                         if (diff > 31) {
                             //if last responded request has more than 31 days then create new request and deduct request charge
                             createRequestAndMakeDeductions(instituteId, candidateId, model, profiles, verificationRequestEntity, profileEntity1);
-
                         }
                     }
 
@@ -321,15 +320,28 @@ public class VerificationController {
                 model.addAttribute("verifiedCandidate", verifiedCandidate);
                 model.addAttribute("authenticationStatus", String.valueOf(verifiedCandidate.get(0).getOutcome()));
 
+                try {
+                    if (null != verificationRequestEntity) {
+                        verificationRequestEntity.setProcessStatus(2);
+                        verificationRequestService.saveVerificationRequest(verificationRequestEntity);
+                    } else {
+                        verificationRequestEntity.setProcessStatus(1);
+                        verificationRequestService.saveVerificationRequest(verificationRequestEntity1);
+                    }
+                } catch (Exception exp) {
+                    //do nothing
+                }
+
+
             } catch (VerifiedCandidatesNotFoundException e) {
                 //create response
                 CandidatesVerifiedEntity candidatesVerifiedEntity = new CandidatesVerifiedEntity();
-                if(null!=verificationRequestEntity.getCandidateNumber()){
+                if (null != verificationRequestEntity.getCandidateNumber()) {
                     model.addAttribute("initialRequestDate", verificationRequestEntity.getRequestDate());
                     model.addAttribute("authenticationStatus", "3");
 
 
-                }else{
+                } else {
                     model.addAttribute("initialRequestDate", verificationRequestEntity1.getRequestDate());
                     model.addAttribute("authenticationStatus", "4");
 
