@@ -14,6 +14,7 @@ import com.iqa.profiles.service.ProfilesService;
 import com.iqa.utilities.Enums;
 import com.iqa.utilities.GeneralDomainFunctions;
 import com.iqa.utilities.JsonObjectConversionUtility;
+import com.iqa.utilities.SendEmailMessages;
 import com.iqa.verificationrequest.exception.VerificationRequestNotFoundException;
 import com.iqa.verificationrequest.model.VerificationRequestEntity;
 import com.iqa.verificationrequest.service.VerificationRequestService;
@@ -821,6 +822,17 @@ public class VerificationController {
                                 } catch (VerifiedCandidatesNotFoundException e) {
                                     verifiedCandidatesService.saveVerifiedCandidates(verified);
                                     message.append("[ " + roww + " New Candidates Added ]\n");
+                                    SendEmailMessages sendEmailMessages = new SendEmailMessages();
+                                    try {
+                                        VerificationRequestEntity verificationRequestEntity = verificationRequestService.VerificationRequestCandidateIdAndInstituteIdAndUserId(verified.getCandidateNumber(), verified.getInstitution(), profile.getId());
+                                        if (verificationRequestEntity.getProcessStatus() != 1) {
+                                            sendEmailMessages.sendMessage(profile.getEmailAddress(), verified.getCandidateNumber(), institutesService.findInstitutesById(verified.getInstitution()).getName());
+                                        }
+                                    } catch (VerificationRequestNotFoundException e1) {
+                                        e1.printStackTrace();
+                                    } catch (InstitutesNotFoundException e1) {
+                                        e1.printStackTrace();
+                                    }
                                 }
                             }
                         }
