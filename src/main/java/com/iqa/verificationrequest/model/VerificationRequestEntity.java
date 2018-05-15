@@ -1,5 +1,7 @@
 package com.iqa.verificationrequest.model;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -7,6 +9,7 @@ import java.sql.Date;
  * Created by louis on 2018/02/12.
  */
 @Entity
+@Audited
 @Table(name = "verification_request", schema = "", catalog = "")
 public class VerificationRequestEntity {
     private int id;

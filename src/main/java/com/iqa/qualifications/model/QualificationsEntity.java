@@ -5,8 +5,8 @@ import javax.persistence.*;
 /**
  * Created by louis on 2018/05/22.
  */
-@Entity
-@Table(name = "qualifications", schema = "iqa-16-05-2018", catalog = "")
+//@Entity
+//@Table(name = "qualifications", schema = "iqa-16-05-2018", catalog = "")
 public class QualificationsEntity {
     private Integer id;
     private String username;

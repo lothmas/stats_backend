@@ -1,5 +1,7 @@
 package com.iqa.verifiedcandidates.model;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -7,6 +9,7 @@ import java.sql.Date;
  * Created by louis on 2018/02/16.
  */
 @Entity
+@Audited
 @Table(name = "candidates_verified", schema = "", catalog = "")
 public class CandidatesVerifiedEntity {
     private int id;

@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 /**
  * Created by louis on 2018/07/25.
  */
-@Entity
-@Table(name = "individual_profile", schema = "iqa-16-05-2018", catalog = "")
+//@Entity
+//@Table(name = "individual_profile", schema = "iqa-16-05-2018", catalog = "")
 public class IndividualProfileEntity {
     private Integer id;
     private String about;
