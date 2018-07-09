@@ -307,7 +307,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
-                    <mainClass>com.iqa.Application</mainClass>
+                    <mainClass>com.stats.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

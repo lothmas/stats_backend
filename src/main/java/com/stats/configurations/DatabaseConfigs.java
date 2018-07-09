@@ -1,4 +1,4 @@
-package com.iqa.configurations;
+package com.stats.configurations;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

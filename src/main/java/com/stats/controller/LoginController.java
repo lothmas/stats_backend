@@ -1,4 +1,4 @@
-package com.iqa.controller;
+package com.stats.controller;
 
 
 import org.springframework.stereotype.Controller;
