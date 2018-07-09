@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vote_nomination", schema = "stats", catalog = "")
+@Table(name = "vote_nomination",  catalog = "")
 public class VoteNominationEntity {
     private int id;
     private String memberId;

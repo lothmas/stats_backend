@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "stats", catalog = "")
+@Table(name = "user",  catalog = "")
 public class UserEntity {
     private int id;
     private String memberId;
@@ -25,6 +25,7 @@ public class UserEntity {
     private Integer gender;
     private String identification;
     private Integer identificationType;
+    private String preferredCategories;
 
     @Basic
     @Column(name = "id", nullable = false)
@@ -200,6 +201,16 @@ public class UserEntity {
     @Column(name = "identification_type", nullable = true)
     public Integer getIdentificationType() {
         return identificationType;
+    }
+
+    @Basic
+    @Column(name = "preferred_categories", nullable = true)
+    public String getPreferredCategories() {
+        return preferredCategories;
+    }
+
+    public void setPreferredCategories(String preferredCategories) {
+        this.preferredCategories = preferredCategories;
     }
 
     public void setIdentificationType(Integer identificationType) {

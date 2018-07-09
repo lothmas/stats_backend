@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "casted_votes", schema = "stats", catalog = "")
+@Table(name = "casted_votes",  catalog = "")
 public class CastedVotesEntity {
     private int id;
     private String voteId;
