@@ -1,6 +1,8 @@
 package com.stats.controller;
 
 
+import com.stats.trending.model.Trending;
+import com.stats.utilities.JsonObjectConversionUtility;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,17 @@ public class LoginController {
         return file_string;
     }
 
-    @RequestMapping({"/login"})
-    public String getPage(HttpServletRequest request, Model model, HttpSession session,
-                          @RequestParam(value = "username", required = false) String username)  {
+    @RequestMapping({"/trending"})
+    @ResponseBody
+    public Trending getPage(HttpServletRequest request, Model model, HttpSession session,
+                            @RequestParam(value = "memberID", required = false) String memberID)  {
         String url = request.getRequestURI();
-        int index = url.lastIndexOf("/");
-        if (index != -1) { }
-        return url;
+        Trending trending=new Trending();
+        trending.setDescription("test");
+        trending.setOwner("louis");
+        return trending;
+//        JsonObjectConversionUtility jsonConversion=new JsonObjectConversionUtility();
+//        return jsonConversion.objectToJson(trending);
     }
 
 
