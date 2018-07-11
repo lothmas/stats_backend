@@ -26,6 +26,7 @@ public class UserEntity {
     private String identification;
     private Integer identificationType;
     private String preferredCategories;
+    private String profilePicPath;
 
     @Basic
     @Column(name = "id", nullable = false)
@@ -203,6 +204,10 @@ public class UserEntity {
         return identificationType;
     }
 
+    public void setIdentificationType(Integer identificationType) {
+        this.identificationType = identificationType;
+    }
+
     @Basic
     @Column(name = "preferred_categories", nullable = true)
     public String getPreferredCategories() {
@@ -213,8 +218,14 @@ public class UserEntity {
         this.preferredCategories = preferredCategories;
     }
 
-    public void setIdentificationType(Integer identificationType) {
-        this.identificationType = identificationType;
+    @Basic
+    @Column(name = "profile_pic_path", nullable = true, length = 5000)
+    public String getProfilePicPath() {
+        return profilePicPath;
+    }
+
+    public void setProfilePicPath(String profilePicPath) {
+        this.profilePicPath = profilePicPath;
     }
 
     @Override

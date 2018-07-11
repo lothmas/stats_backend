@@ -1,4 +1,4 @@
-package com.stats.trending.model;
+package com.stats.domain.trending.model;
 
 public class Trending {
     private String profilePic;
@@ -7,6 +7,7 @@ public class Trending {
     private String description;
     private int descriptionType;
     private String time;
+    private String mainDisplay;
 
 
     public String getProfilePic() {
@@ -55,5 +56,13 @@ public class Trending {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getMainDisplay() {
+        return mainDisplay;
+    }
+
+    public void setMainDisplay(String mainDisplay) {
+        this.mainDisplay = mainDisplay;
     }
 }

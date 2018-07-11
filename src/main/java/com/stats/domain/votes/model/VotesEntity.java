@@ -1,12 +1,13 @@
-package com.stats.models;
+package com.stats.domain.votes.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vote_nomination",  catalog = "")
-public class VoteNominationEntity {
+@Table(name = "votes",  catalog = "")
+public class VotesEntity {
     private int id;
     private String memberId;
     private String description;
@@ -17,6 +18,7 @@ public class VoteNominationEntity {
     private Date startDate;
     private Date endDate;
     private Integer voteType;
+    private Timestamp creationDate;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -59,7 +61,7 @@ public class VoteNominationEntity {
     }
 
     @Basic
-    @Column(name = "post_path", nullable = true, length = 100)
+    @Column(name = "post_path", nullable = true, length = 5000)
     public String getPostPath() {
         return postPath;
     }
@@ -118,11 +120,21 @@ public class VoteNominationEntity {
         this.voteType = voteType;
     }
 
+    @Basic
+    @Column(name = "creation_date_time", nullable = true)
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VoteNominationEntity that = (VoteNominationEntity) o;
+        VotesEntity that = (VotesEntity) o;
         return id == that.id &&
                 postType == that.postType &&
                 Objects.equals(memberId, that.memberId) &&

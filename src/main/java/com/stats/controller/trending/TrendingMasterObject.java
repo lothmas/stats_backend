@@ -1,6 +1,6 @@
 package com.stats.controller.trending;
 
-import com.stats.trending.model.Trending;
+import com.stats.domain.trending.model.Trending;
 
 import java.util.List;
 
