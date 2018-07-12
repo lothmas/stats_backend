@@ -44,6 +44,7 @@ class VotesEntityDaoImpl extends AbstractDaoImpl<VotesEntity, Integer> implement
         List<Trending> trendingList=new ArrayList<>();
         List<VotesEntity> votes = getCurrentSession().createCriteria(VotesEntity.class)
                 .add(Restrictions.ne("memberId", "34"))
+                .addOrder(Order.desc("id"))
                 .list();
 
         for(VotesEntity trendingVotes:votes){
