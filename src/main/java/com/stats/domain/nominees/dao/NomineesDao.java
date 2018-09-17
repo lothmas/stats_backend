@@ -10,6 +10,7 @@ package com.stats.domain.nominees.dao;
 import com.stats.domain.trending.model.Trending;
 import com.stats.domain.nominees.exception.NomineesNotFoundException;
 import com.stats.domain.nominees.model.NomineesEntity;
+import com.stats.domain.votes.exception.VotesEntityNotFoundException;
 import com.stats.utilities.AbstractDao;
 
 import java.util.List;
@@ -20,6 +21,6 @@ import java.util.List;
  */
 public interface NomineesDao extends AbstractDao<NomineesEntity, Integer> {
 
-    public List<Trending> trendingNominees(String memberID) throws NomineesNotFoundException;
+    public List<NomineesEntity> getVoteNominees(int voteID) throws VotesEntityNotFoundException, NomineesNotFoundException;
 
 }

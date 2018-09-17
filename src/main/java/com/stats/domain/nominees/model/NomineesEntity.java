@@ -8,11 +8,12 @@ import java.util.Objects;
 @Table(name = "nominees", schema = "stats", catalog = "")
 public class NomineesEntity {
     private int id;
-    private String voteId;
+    private int voteId;
     private String nomineeName;
     private String nomineeImage;
     private String nomineesDescription;
     private Date creationDate;
+    private int enabled;
 
     @Id
     @Column(name = "id")
@@ -26,12 +27,22 @@ public class NomineesEntity {
 
     @Basic
     @Column(name = "vote_id")
-    public String getVoteId() {
+    public int getVoteId() {
         return voteId;
     }
 
-    public void setVoteId(String voteId) {
+    public void setVoteId(int voteId) {
         this.voteId = voteId;
+    }
+
+    @Basic
+    @Column(name = "enabled")
+    public int getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
     }
 
     @Basic

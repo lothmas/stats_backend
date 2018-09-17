@@ -7,6 +7,7 @@ package com.stats.domain.nominees.service;
 
 
 import com.stats.domain.nominees.exception.NomineesNotFoundException;
+import com.stats.domain.nominees.model.NomineesEntity;
 import com.stats.domain.trending.model.Trending;
 import com.stats.domain.votes.exception.VotesEntityNotFoundException;
 
@@ -18,5 +19,5 @@ import java.util.List;
  */
 public interface NomineesService {
 
-    public List<Trending> trendingVotes(String memberID) throws VotesEntityNotFoundException, NomineesNotFoundException;
+    public List<NomineesEntity> getVoteNominees(int voteID) throws VotesEntityNotFoundException, NomineesNotFoundException;
 }

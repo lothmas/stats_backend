@@ -2,6 +2,9 @@ package com.stats.controller.trending;
 
 
 import com.stats.controller.trending.TrendingMasterObject;
+import com.stats.domain.nominees.exception.NomineesNotFoundException;
+import com.stats.domain.nominees.model.NomineesEntity;
+import com.stats.domain.nominees.service.NomineesService;
 import com.stats.domain.trending.model.Trending;
 import com.stats.domain.votes.exception.VotesEntityNotFoundException;
 import com.stats.domain.votes.service.VotesEntityService;
@@ -23,6 +26,9 @@ public class TrendingController {
 
     @Autowired
     VotesEntityService votesEntityService;
+
+    @Autowired
+    NomineesService nomineesService;
 
     public static String byteToString(byte[] _bytes) {
         String file_string = "";
@@ -52,6 +58,23 @@ public class TrendingController {
     }
 
 
+    @RequestMapping({"/nominees"})
+    @ResponseBody
+    public String getNominees(HttpServletRequest request, Model model, HttpSession session,
+                           @RequestParam(value = "voteID", required = false) String voteID) {
+        try {
 
+            List<NomineesEntity> nomineesEntities = nomineesService.getVoteNominees(Integer.parseInt(voteID));
+            NomineeMasterObject nomineeMasterObject=new NomineeMasterObject();
+            nomineeMasterObject.setNomineesEntityList(nomineesEntities);
+            JsonObjectConversionUtility jsonConversion=new JsonObjectConversionUtility();
+            return jsonConversion.objectToJson(nomineeMasterObject);
+        } catch (VotesEntityNotFoundException e) {
+            return null;
+        } catch (NomineesNotFoundException e) {
+            return null;
+        }
+
+    }
 
 }
