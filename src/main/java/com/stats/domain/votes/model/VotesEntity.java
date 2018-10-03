@@ -19,6 +19,8 @@ public class VotesEntity {
     private Date endDate;
     private Integer voteType;
     private Timestamp creationDate;
+    private Integer voteBy;
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -128,6 +130,16 @@ public class VotesEntity {
 
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Basic
+    @Column(name = "vote_by", nullable = true)
+    public Integer getVoteBy() {
+        return voteBy;
+    }
+
+    public void setVoteBy(Integer voteBy) {
+        this.voteBy = voteBy;
     }
 
     @Override
