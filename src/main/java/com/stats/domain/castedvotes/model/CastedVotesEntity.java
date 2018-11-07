@@ -1,4 +1,4 @@
-package com.stats.models;
+package com.stats.domain.castedvotes.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

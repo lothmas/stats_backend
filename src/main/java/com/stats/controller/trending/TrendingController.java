@@ -2,6 +2,8 @@ package com.stats.controller.trending;
 
 
 import com.stats.controller.trending.TrendingMasterObject;
+import com.stats.domain.castedvotes.exception.CastedVotesNotFoundException;
+import com.stats.domain.castedvotes.service.CastedVotesService;
 import com.stats.domain.nominees.exception.NomineesNotFoundException;
 import com.stats.domain.nominees.model.NomineesEntity;
 import com.stats.domain.nominees.service.NomineesService;
@@ -30,6 +32,9 @@ public class TrendingController {
     @Autowired
     NomineesService nomineesService;
 
+    @Autowired
+    CastedVotesService castedVotesService;
+
     public static String byteToString(byte[] _bytes) {
         String file_string = "";
 
@@ -46,8 +51,19 @@ public class TrendingController {
                                         @RequestParam(value = "memberID", required = false) String memberID) {
         try {
             List<Trending> trendings = votesEntityService.trendingVotes(memberID);
+            List<Trending> trendingWithCastedNumber=new ArrayList<>();
+            for(Trending trend:trendings){
+                try {
+                    int castedVotes=castedVotesService.getCastedVotesByVoteIDAndMemberID(trend.getVoteId(), Integer.parseInt(memberID)).size();
+                    trend.setVotesCasted(castedVotes);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                trendingWithCastedNumber.add(trend);
+
+            }
             TrendingMasterObject trendingMasterObject=new TrendingMasterObject();
-            trendingMasterObject.setTrendingList(trendings);
+            trendingMasterObject.setTrendingList(trendingWithCastedNumber);
             JsonObjectConversionUtility jsonConversion=new JsonObjectConversionUtility();
             return jsonConversion.objectToJson(trendingMasterObject);
         } catch (VotesEntityNotFoundException e) {
@@ -58,9 +74,9 @@ public class TrendingController {
     }
 
 
-    @RequestMapping({"/nominees"})
+    @RequestMapping({"/castedVotes"})
     @ResponseBody
-    public String getNominees(HttpServletRequest request, Model model, HttpSession session,
+    public String getUserCastedVotes(HttpServletRequest request, Model model, HttpSession session,
                            @RequestParam(value = "voteID", required = false) String voteID) {
         try {
 

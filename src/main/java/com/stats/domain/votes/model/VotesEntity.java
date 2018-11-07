@@ -20,6 +20,7 @@ public class VotesEntity {
     private Integer voteType;
     private Timestamp creationDate;
     private Integer voteBy;
+    private Integer allowedVoteNumber;
 
 
     @Id
@@ -140,6 +141,16 @@ public class VotesEntity {
 
     public void setVoteBy(Integer voteBy) {
         this.voteBy = voteBy;
+    }
+
+    @Basic
+    @Column(name = "allowed_vote_number", nullable = true)
+    public Integer getAllowedVoteNumber() {
+        return allowedVoteNumber;
+    }
+
+    public void setAllowedVoteNumber(Integer allowedVoteNumber) {
+        this.allowedVoteNumber = allowedVoteNumber;
     }
 
     @Override

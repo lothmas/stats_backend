@@ -59,6 +59,7 @@ class VotesEntityDaoImpl extends AbstractDaoImpl<VotesEntity, Integer> implement
             trending.setVoteId(trendingVotes.getId());
             trending.setVoteType(trendingVotes.getVoteType());
             trending.setVoteBy(trendingVotes.getVoteBy());
+            trending.setAllowedVoteNumber(trendingVotes.getAllowedVoteNumber());
 
             List<UserEntity> user = getCurrentSession().createCriteria(UserEntity.class)
                     .add(Restrictions.eq("memberId", trendingVotes.getMemberId()))
