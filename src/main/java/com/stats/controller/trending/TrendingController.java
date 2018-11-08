@@ -93,4 +93,23 @@ public class TrendingController {
 
     }
 
+    @RequestMapping({"/nominees"})
+    @ResponseBody
+    public String getNominees(HttpServletRequest request, Model model, HttpSession session,
+                              @RequestParam(value = "voteID", required = false) String voteID) {
+        try {
+
+            List<NomineesEntity> nomineesEntities = nomineesService.getVoteNominees(Integer.parseInt(voteID));
+            NomineeMasterObject nomineeMasterObject=new NomineeMasterObject();
+            nomineeMasterObject.setNomineesEntityList(nomineesEntities);
+            JsonObjectConversionUtility jsonConversion=new JsonObjectConversionUtility();
+            return jsonConversion.objectToJson(nomineeMasterObject);
+        } catch (VotesEntityNotFoundException e) {
+            return null;
+        } catch (NomineesNotFoundException e) {
+            return null;
+        }
+
+    }
+
 }
