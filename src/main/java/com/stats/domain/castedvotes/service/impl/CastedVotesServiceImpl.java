@@ -34,7 +34,7 @@ public class CastedVotesServiceImpl implements CastedVotesService {
 
 
     @Override
-    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, int memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException {
+    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, String memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException {
         return CastedVotesDao.getCastedVotesByVoteIDAndMemberID(voteID,memberID);
     }
 }

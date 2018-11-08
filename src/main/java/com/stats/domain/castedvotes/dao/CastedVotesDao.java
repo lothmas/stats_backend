@@ -20,6 +20,6 @@ import java.util.List;
  */
 public interface CastedVotesDao extends AbstractDao<CastedVotesEntity, Integer> {
 
-    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, int memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException;
+    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, String memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException;
 
 }

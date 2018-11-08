@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "casted_votes",  catalog = "")
 public class CastedVotesEntity {
     private int id;
-    private String voteId;
+    private int voteId;
     private String memberId;
     private int voterIdentity;
     private Integer like;
@@ -28,11 +28,11 @@ public class CastedVotesEntity {
 
     @Basic
     @Column(name = "vote_id", nullable = false, length = 45)
-    public String getVoteId() {
+    public int getVoteId() {
         return voteId;
     }
 
-    public void setVoteId(String voteId) {
+    public void setVoteId(int voteId) {
         this.voteId = voteId;
     }
 

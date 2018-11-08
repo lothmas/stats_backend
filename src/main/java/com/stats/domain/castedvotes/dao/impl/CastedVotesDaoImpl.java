@@ -36,8 +36,8 @@ class CastedVotesDaoImpl extends AbstractDaoImpl<CastedVotesEntity, Integer> imp
 
 
     @Override
-    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, int memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException {
-        List<CastedVotesEntity> CastedVotes = getCurrentSession().createCriteria(CastedVotesEntity.class)
+    public List<CastedVotesEntity> getCastedVotesByVoteIDAndMemberID(int voteID, String memberID) throws VotesEntityNotFoundException, CastedVotesNotFoundException {
+        try{List<CastedVotesEntity> CastedVotes = getCurrentSession().createCriteria(CastedVotesEntity.class)
                 .add(Restrictions.eq("voteId", voteID))
                 .add(Restrictions.eq("memberId", memberID))
                 .addOrder(Order.desc("id"))
@@ -47,6 +47,10 @@ class CastedVotesDaoImpl extends AbstractDaoImpl<CastedVotesEntity, Integer> imp
             throw new CastedVotesNotFoundException("No CastedVotes Found for this vote");
         }
 
-        return CastedVotes;
+        return CastedVotes;}
+        catch (Exception e){
+            String ddc="sd";
+        }
+        return null;
     }
 }

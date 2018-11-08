@@ -54,7 +54,7 @@ public class TrendingController {
             List<Trending> trendingWithCastedNumber=new ArrayList<>();
             for(Trending trend:trendings){
                 try {
-                    int castedVotes=castedVotesService.getCastedVotesByVoteIDAndMemberID(trend.getVoteId(), Integer.parseInt(memberID)).size();
+                    int castedVotes=castedVotesService.getCastedVotesByVoteIDAndMemberID(trend.getVoteId(), memberID).size();
                     trend.setVotesCasted(castedVotes);
                 } catch (Exception e) {
                     e.printStackTrace();
